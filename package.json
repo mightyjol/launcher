@@ -1,12 +1,14 @@
 {
-  "name": "template",
-  "description": "template",
-  "version": "0.0.9",
+  "name": "launcher",
+  "description": "cool launcher",
+  "version": "0.0.10",
   "license": "MIT",
   "author": "mighty",
   "main": "electron/main.js",
   "scripts": {
-    "dev": "concurrently \"sapper dev\" \"wait-on http://localhost:3000 && cross-env NODE_ENV=development electron .\"",
+    "autobuild": "rollup -c -w",
+    "dev": "concurrently \"npm run autobuild\" \"cross-env NODE_ENV=development ELECTRON_RELOAD=yes electron .\"",
+    "prod": "cross-env NODE_ENV=production electron .",
     "dev-web": "sapper dev",
     "build": "sapper build",
     "releasewin": "cmd /c release.sh",
@@ -17,7 +19,9 @@
     "import": "yarn electron-forge import",
     "package": "electron-forge package",
     "setup": "",
-    "make": "electron-forge make"
+    "export": "./electron/public",
+    "make": "electron-forge make",
+    "publish": "electron-forge publish"
   },
   "dependencies": {
     "body-parser": "^1.19.0",
@@ -41,6 +45,7 @@
     "@electron-forge/maker-rpm": "^6.0.0-beta.54",
     "@electron-forge/maker-squirrel": "^6.0.0-beta.54",
     "@electron-forge/maker-zip": "^6.0.0-beta.54",
+    "@electron-forge/publisher-github": "^6.0.0-beta.54",
     "bulma": "^0.7.5",
     "concurrently": "^4.1.2",
     "cross-env": "^5.2.1",
@@ -65,6 +70,18 @@
   "config": {
     "forge": {
       "packagerConfig": {},
+      "publishers": [
+        {
+          "name": "@electron-forge/publisher-github",
+          "config": {
+            "authToken": "81c2bc53ea0e9c52776726805c84138d26a50e0f",
+            "repository": {
+              "owner": "mightyjol",
+              "name": "launcher"
+            }
+          }
+        }
+      ],
       "makers": [
         {
           "name": "@electron-forge/maker-squirrel",
