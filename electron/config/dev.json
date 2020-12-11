@@ -1,0 +1,6 @@
+{
+	"server": {
+		"dev" : "http://localhost:3000/",
+		"prod": "http://localhost:3000/"
+	}
+}
