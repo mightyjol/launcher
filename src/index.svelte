@@ -5,4 +5,4 @@
 </script>
 
 <a href="./test.html">test</a>
-<p>fully loaded</p>
+<p>mis a jour :D</p>
