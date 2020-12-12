@@ -90,11 +90,11 @@ const loadUrl = "static/index.html";
 // auto updates
 const server = "https://hazel.insomniak.vercel.app"
 const feed = `${server}/update/${process.platform}/${app.getVersion()}`
-console.log(feed)
+
 autoUpdater.setFeedURL(feed)
 
 if(fs.existsSync(path.resolve(path.dirname(process.execPath), '..', 'update.exe'))){
-	mainWindow.webContents.send('fromMain', 'check updates')
+	if(mainWindow) mainWindow.webContents.send('fromMain', 'check updates')
 
 	setInterval(() => {
 		autoUpdater.checkForUpdates()
@@ -103,11 +103,11 @@ if(fs.existsSync(path.resolve(path.dirname(process.execPath), '..', 'update.exe'
 }
 
 autoUpdater.on('update-available', (event) => {
-	mainWindow.webContents.send('fromMain', 'update found')
+	if(mainWindow) mainWindow.webContents.send('fromMain', 'update found')
 })
 
 autoUpdater.on('update-not-available', (event) => {
-	mainWindow.webContents.send('fromMain', 'no update')
+	if(mainWindow) mainWindow.webContents.send('fromMain', 'no update')
 })
 
 autoUpdater.on('update-downloaded', (event, releaseNotes, releaseName) => {
@@ -118,7 +118,7 @@ autoUpdater.on('update-downloaded', (event, releaseNotes, releaseName) => {
 	  message: process.platform === 'win32' ? releaseNotes : releaseName,
 	  detail: 'A new version has been downloaded. Restart the application to apply the updates.'
 	}
-	mainWindow.webContents.send('fromMain', 'update downloaded')
+	if(mainWindow) mainWindow.webContents.send('fromMain', 'update downloaded')
 	
 	dialog.showMessageBox(dialogOpts).then((returnValue) => {
 	  if (returnValue.response === 0) autoUpdater.quitAndInstall()
@@ -137,7 +137,7 @@ autoUpdater.on('error', message => {
 	dialog.showMessageBox(dialogOpts).then((returnValue) => {
 	})
 
-	mainWindow.webContents.send('fromMain', message)
+	if(mainWindow) mainWindow.webContents.send('fromMain', message)
 })
 
 createWindow = (preload = true) => {
@@ -180,7 +180,7 @@ createMainWindow = () => {
 	mainWindow.once('ready-to-show', () => {
 		//console.error('test')
 		mainWindow.show();
-		mainWindow.webContents.send('fromMain', 'init')
+		if(mainWindow) mainWindow.webContents.send('fromMain', 'init')
 		// //TODO figure out what this is for
 		// ipcMain.on('open-external-window', (event, arg) => {
 		// 	shell.openExternal(arg);
