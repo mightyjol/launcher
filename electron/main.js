@@ -1,5 +1,6 @@
 const { app, BrowserWindow, shell, ipcMain, Menu, autoUpdater, dialog  } = require('electron');
-
+// main
+let mainWindow
 // prevents launching during install
 // if (require('electron-squirrel-startup')) return app.quit();
 
@@ -138,9 +139,6 @@ autoUpdater.on('error', message => {
 
 	mainWindow.webContents.send('fromMain', message)
 })
-
-// main
-let mainWindow
 
 createWindow = (preload = true) => {
 	let newWindow = new BrowserWindow({
