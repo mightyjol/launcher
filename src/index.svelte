@@ -5,4 +5,4 @@
 </script>
 
 <a href="./test.html">test</a>
-<p>reloaded</p>
+<p>fully loaded</p>
