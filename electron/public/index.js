@@ -319,7 +319,7 @@
     			a.textContent = "test";
     			t1 = space();
     			p = element("p");
-    			p.textContent = "loaded";
+    			p.textContent = "reloaded";
     			attr_dev(a, "href", "./test.html");
     			add_location(a, file, 6, 0, 140);
     			add_location(p, file, 7, 0, 172);

@@ -1,6 +1,8 @@
 const { app, BrowserWindow, shell, ipcMain, Menu, autoUpdater, dialog  } = require('electron');
 // main
 let mainWindow
+let checkUpdateInterval
+
 // prevents launching during install
 // if (require('electron-squirrel-startup')) return app.quit();
 
@@ -96,14 +98,14 @@ autoUpdater.setFeedURL(feed)
 if(fs.existsSync(path.resolve(path.dirname(process.execPath), '..', 'update.exe'))){
 	if(mainWindow) mainWindow.webContents.send('fromMain', 'check updates')
 
-	setInterval(() => {
+	checkUpdateInterval = setInterval(() => {
 		autoUpdater.checkForUpdates()
-		console.log("checking for updates")
 	}, 5000)
 }
 
 autoUpdater.on('update-available', (event) => {
 	if(mainWindow) mainWindow.webContents.send('fromMain', 'update found')
+	clearInterval(checkUpdateInterval)
 })
 
 autoUpdater.on('update-not-available', (event) => {
