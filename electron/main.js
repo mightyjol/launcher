@@ -90,7 +90,7 @@ const loadUrl = "static/index.html";
 // auto updates
 const server = "https://hazel.insomniak.vercel.app"
 const feed = `${server}/update/${process.platform}/${app.getVersion()}`
-
+console.log(feed)
 autoUpdater.setFeedURL(feed)
 
 if(fs.existsSync(path.resolve(path.dirname(process.execPath), '..', 'update.exe'))){
