@@ -1,2 +1,8 @@
+<script>
+    window.api.receive("fromMain", (data) => {
+        console.log(`Received ${data} from main process`);
+    });
+</script>
+
 <a href="./test.html">test</a>
-<p>hello from launcher</p>
+<p>hello</p>

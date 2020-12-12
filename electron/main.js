@@ -1,4 +1,4 @@
-const { app, BrowserWindow, shell, ipcMain, Menu, autoUpdater } = require('electron');
+const { app, BrowserWindow, shell, ipcMain, Menu, autoUpdater, dialog  } = require('electron');
 
 // prevents launching during install
 // if (require('electron-squirrel-startup')) return app.quit();
@@ -93,11 +93,21 @@ const feed = `${server}/update/${process.platform}/${app.getVersion()}`
 autoUpdater.setFeedURL(feed)
 
 if(fs.existsSync(path.resolve(path.dirname(process.execPath), '..', 'update.exe'))){
+	mainWindow.webContents.send('fromMain', 'check updates')
+
 	setInterval(() => {
 		autoUpdater.checkForUpdates()
 		console.log("checking for updates")
 	}, 5000)
 }
+
+autoUpdater.on('update-available', (event) => {
+	mainWindow.webContents.send('fromMain', 'update found')
+})
+
+autoUpdater.on('update-not-available', (event) => {
+	mainWindow.webContents.send('fromMain', 'no update')
+})
 
 autoUpdater.on('update-downloaded', (event, releaseNotes, releaseName) => {
 	const dialogOpts = {
@@ -107,15 +117,26 @@ autoUpdater.on('update-downloaded', (event, releaseNotes, releaseName) => {
 	  message: process.platform === 'win32' ? releaseNotes : releaseName,
 	  detail: 'A new version has been downloaded. Restart the application to apply the updates.'
 	}
-  
+	mainWindow.webContents.send('fromMain', 'update downloaded')
+	
 	dialog.showMessageBox(dialogOpts).then((returnValue) => {
 	  if (returnValue.response === 0) autoUpdater.quitAndInstall()
 	})
 })
 
 autoUpdater.on('error', message => {
-	console.error('There was a problem updating the application')
-	console.error(message)
+	const dialogOpts = {
+		type: 'error',
+		buttons: ['ok'],
+		title: 'Application Update Error',
+		message: "error",
+		detail: message
+	}
+	
+	dialog.showMessageBox(dialogOpts).then((returnValue) => {
+	})
+
+	mainWindow.webContents.send('fromMain', message)
 })
 
 // main
@@ -130,7 +151,8 @@ createWindow = (preload = true) => {
 		width: 1280,
 		height: 860,
 		webPreferences: {
-			contextIsolation: true
+			contextIsolation: true,
+			preload: path.join(app.getAppPath(), 'electron/preload.js')
 		}
 	});
 
@@ -139,29 +161,28 @@ createWindow = (preload = true) => {
 
 createMainWindow = () => {
 	mainWindow = createWindow()
-	console.log(loadUrl)
- 
-		// todo check how long this takes
-		let fileUrl = path.join(__dirname, loadUrl)
-		// let data = fs.readFileSync(fileUrl, {encoding:'utf8', flag:'r'});
-
-		// let result = data.replace('<base href=/ >', `<base href="${ __dirname.replaceAll('\\', '/') + '/public/' }" >`)
-
-		// fs.writeFileSync(fileUrl, result)
-		console.log(fileUrl)
-		mainWindow.loadURL(url.format({
-			pathname: fileUrl,
-			protocol: 'file:',
-			slashes: true
-		}))
 	 
+	// todo check how long this takes
+	let fileUrl = path.join(__dirname, loadUrl)
+	// let data = fs.readFileSync(fileUrl, {encoding:'utf8', flag:'r'});
+
+	// let result = data.replace('<base href=/ >', `<base href="${ __dirname.replaceAll('\\', '/') + '/public/' }" >`)
+
+	// fs.writeFileSync(fileUrl, result)
+
+	mainWindow.loadURL(url.format({
+		pathname: fileUrl,
+		protocol: 'file:',
+		slashes: true
+	}))
+	
 
 	/*if(dev)*/ mainWindow.webContents.openDevTools();
 	
 	mainWindow.once('ready-to-show', () => {
 		//console.error('test')
 		mainWindow.show();
-
+		mainWindow.webContents.send('fromMain', 'init')
 		// //TODO figure out what this is for
 		// ipcMain.on('open-external-window', (event, arg) => {
 		// 	shell.openExternal(arg);

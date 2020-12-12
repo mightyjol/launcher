@@ -1,7 +1,7 @@
 {
   "name": "launcher",
   "description": "cool launcher",
-  "version": "0.0.10",
+  "version": "0.0.12",
   "license": "MIT",
   "author": "mighty",
   "main": "electron/main.js",
@@ -21,7 +21,7 @@
     "setup": "",
     "export": "./electron/public",
     "make": "electron-forge make",
-    "publish": "electron-forge publish"
+    "publish": "cross-env GITHUB_TOKEN=7a3abf4b03b4aafcbd73c6e4be8adfb0eaff9eb4 electron-forge publish"
   },
   "dependencies": {
     "body-parser": "^1.19.0",
@@ -74,7 +74,6 @@
         {
           "name": "@electron-forge/publisher-github",
           "config": {
-            "authToken": "81c2bc53ea0e9c52776726805c84138d26a50e0f",
             "repository": {
               "owner": "mightyjol",
               "name": "launcher"
