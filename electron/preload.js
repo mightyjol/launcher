@@ -4,9 +4,8 @@ const {
 } = require("electron");
 const install = require("./install.js")
 const launch = require("./launch.js")
-const Store = require('electron-store')
+const store = require('./store.js')
 
-let store = new Store()
 // Expose protected methods that allow the renderer process to use
 // the ipcRenderer without exposing the entire object
 contextBridge.exposeInMainWorld(
@@ -32,7 +31,7 @@ contextBridge.exposeInMainWorld(
     "games", {
         getDataForGame: (name) => {
             return {
-                ...store.get('witchcraft')
+                ...store.get(name)
             }
         },
         install: (name) => {

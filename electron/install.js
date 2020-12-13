@@ -8,11 +8,10 @@ let games = {
 
 const {google} = require('googleapis');
 const credentials = require('./google.json');
+const store = require('./store.js')
 const Progress = require('progress-stream');
 const fs = require('fs')
 const unzip = require('unzipper');
-const { resolve } = require('path');
-const Store = require('electron-store');
 const remote = require("electron").remote;
 const dev = process.env.NODE_ENV === 'development';
 
@@ -26,7 +25,6 @@ const auth = new google.auth.JWT(
 );
 
 let drive = google.drive({version: 'v3', auth})
-let store = new Store()
 
 module.exports = function(name){
     console.log('installing ' + name)
@@ -85,13 +83,13 @@ function installFromTmp(game, file){
                 // write to local file
             }
             console.log('updating store')
-            let data = {}
-            data[game] = {
+            let data = {
                 installed: true,
                 version: file.name.replace('.zip', ''),
-                path: null
+                path: null,
+                patches: []
             }
-            store.set(data)
+            store.set(game, data)
             console.log('store updated')
 
             console.log('sending message to window')
