@@ -1,6 +1,5 @@
 const child = require('child_process').execFile;
-const Store = require('electron-store');
-let store = new Store()
+const store = require('./store.js');
 
 module.exports = function(name){
     let { path:base, version } = store.get(name) 

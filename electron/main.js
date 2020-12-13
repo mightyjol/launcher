@@ -1,4 +1,5 @@
-const { app, BrowserWindow, shell, ipcMain, Menu, autoUpdater, dialog  } = require('electron');
+const { app, BrowserWindow, shell, ipcMain, Menu, dialog  } = require('electron');
+const { autoUpdater } = require("electron-updater");
 // main
 let mainWindow
 let checkUpdateInterval
@@ -105,6 +106,10 @@ autoUpdater.on('update-available', (event) => {
 
 autoUpdater.on('update-not-available', (event) => {
 	if(mainWindow) mainWindow.webContents.send('fromMain', 'no update')
+})
+
+autoUpdater.on('download-progress', (progressObj) => {
+	if(mainWindow) mainWindow.webContents.send('fromMain', 'Downloaded ' + progressObj.percent + '%')
 })
 
 autoUpdater.on('update-downloaded', (event, releaseNotes, releaseName) => {

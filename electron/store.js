@@ -1,9 +1,12 @@
 const fs = require('fs')
 
 let configPath = "config.json"
+let defaults = {
+    witch_craft: { installed: false }
+}
 
 fs.readFile(configPath, (err) => {
-    if(err) fs.writeFile(configPath, JSON.stringify({}), () => {})
+    if(err) fs.writeFile(configPath, JSON.stringify(defaults), () => {})
 }) 
  
 module.exports = {
