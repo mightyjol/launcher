@@ -1,7 +1,7 @@
 {
   "name": "launcher",
   "description": "cool launcher",
-  "version": "0.0.25",
+  "version": "0.0.26",
   "license": "MIT",
   "author": "mighty",
   "main": "electron/main.js",
@@ -27,7 +27,8 @@
     "electron-squirrel-startup": "^1.0.0",
     "googleapis": "^66.0.0",
     "progress-stream": "^2.0.0",
-    "unzipper": "^0.10.11"
+    "unzipper": "^0.10.11",
+    "electron-updater": "^4.3.5"
   },
   "devDependencies": {
     "@babel/core": "^7.7.2",
@@ -45,7 +46,6 @@
     "concurrently": "^5.3.0",
     "cross-env": "^5.2.1",
     "electron": "^11.0.4",
-    "electron-updater": "^4.3.5",
     "faunadb": "^2.9.4",
     "lowdb": "^1.0.0",
     "npm-run-all": "^4.1.5",
