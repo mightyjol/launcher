@@ -78,13 +78,8 @@ function handleSquirrelEvent() {
 const path = require('path')
 const url = require('url')
 const fs = require('fs')
-const child = require('child_process').execFile;
-
-const low = require("lowdb")
-const Adapter = require('lowdb/adapters/FileSync')
 
 const config = require('./config/dev.json');
-const { file } = require('electron-settings');
 const basepath = process.env['APP_PATH'] = app.getAppPath();
 const dev = process.env.NODE_ENV === 'development';
 const loadUrl = "static/index.html";
