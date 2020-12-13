@@ -1,7 +1,7 @@
 {
   "name": "launcher",
   "description": "cool launcher",
-  "version": "0.0.26",
+  "version": "0.0.27",
   "license": "MIT",
   "author": "mighty",
   "main": "electron/main.js",
@@ -25,10 +25,10 @@
   },
   "dependencies": {
     "electron-squirrel-startup": "^1.0.0",
+    "electron-updater": "^4.3.5",
     "googleapis": "^66.0.0",
     "progress-stream": "^2.0.0",
-    "unzipper": "^0.10.11",
-    "electron-updater": "^4.3.5"
+    "unzipper": "^0.10.11"
   },
   "devDependencies": {
     "@babel/core": "^7.7.2",
@@ -65,10 +65,12 @@
     "forge": {
       "packagerConfig": {
         "ignore": [
-          "witch_craft",
-          "out",
-          "deployment",
-          "tmp"
+          "^(/witch_craft$)",
+          "^(/out$)",
+          "^(/src$)",
+          "^(/.vscode$)",
+          "^(/tmp$)",
+          "^(/deployment$)"
         ]
       },
       "publishers": [

@@ -1,5 +1,6 @@
 const { app, BrowserWindow, shell, ipcMain, Menu, dialog  } = require('electron');
-const { autoUpdater } = require("electron-updater");
+const { autoUpdater } = require('electron-updater')
+
 // main
 let mainWindow
 let checkUpdateInterval
@@ -198,8 +199,12 @@ app.on('ready', () => {
 	createMainWindow();
 });
 
-app.on('window-all-closed', () => {
-	app.quit();
+
+app.on('window-all-closed', app.quit);
+
+app.on('before-quit', () => {
+    mainWindow.removeAllListeners('close');
+    mainWindow.close();
 });
 
 app.on('activate', () => {
