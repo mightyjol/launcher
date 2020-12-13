@@ -1,13 +1,6 @@
 const fs = require('fs')
 
 let configPath = "config.json"
-let defaults = {
-    witch_craft: { installed: false }
-}
-
-fs.readFileSync(configPath, (err) => {
-    if(err) fs.writeFileSync(configPath, JSON.stringify(defaults), () => {})
-}) 
  
 module.exports = {
     set: function(key, object){
