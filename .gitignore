@@ -7,5 +7,6 @@ static/css/generated
 src/firebase/config.js
 yarn-error.log
 .firebaserc
-
+/witch_craft/
+/tmp/
 out/

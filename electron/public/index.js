@@ -40,11 +40,12 @@
     function space() {
         return text(' ');
     }
-    function attr(node, attribute, value) {
-        if (value == null)
-            node.removeAttribute(attribute);
-        else if (node.getAttribute(attribute) !== value)
-            node.setAttribute(attribute, value);
+    function empty() {
+        return text('');
+    }
+    function listen(node, event, handler, options) {
+        node.addEventListener(event, handler, options);
+        return () => node.removeEventListener(event, handler, options);
     }
     function children(element) {
         return Array.from(element.childNodes);
@@ -269,12 +270,18 @@
         dispatch_dev('SvelteDOMRemove', { node });
         detach(node);
     }
-    function attr_dev(node, attribute, value) {
-        attr(node, attribute, value);
-        if (value == null)
-            dispatch_dev('SvelteDOMRemoveAttribute', { node, attribute });
-        else
-            dispatch_dev('SvelteDOMSetAttribute', { node, attribute, value });
+    function listen_dev(node, event, handler, options, has_prevent_default, has_stop_propagation) {
+        const modifiers = options === true ? ['capture'] : options ? Array.from(Object.keys(options)) : [];
+        if (has_prevent_default)
+            modifiers.push('preventDefault');
+        if (has_stop_propagation)
+            modifiers.push('stopPropagation');
+        dispatch_dev('SvelteDOMAddEventListener', { node, event, handler, modifiers });
+        const dispose = listen(node, event, handler, options);
+        return () => {
+            dispatch_dev('SvelteDOMRemoveEventListener', { node, event, handler, modifiers });
+            dispose();
+        };
     }
     function validate_slots(name, slot, keys) {
         for (const slot_key of Object.keys(slot)) {
@@ -308,37 +315,185 @@
     const { console: console_1 } = globals;
     const file = "src\\index.svelte";
 
-    function create_fragment(ctx) {
-    	let a;
-    	let t1;
-    	let p;
+    // (27:0) {:else}
+    function create_else_block(ctx) {
+    	let button;
+    	let mounted;
+    	let dispose;
 
     	const block = {
     		c: function create() {
-    			a = element("a");
-    			a.textContent = "test";
+    			button = element("button");
+    			button.textContent = "Lancer le jeu";
+    			add_location(button, file, 27, 4, 827);
+    		},
+    		m: function mount(target, anchor) {
+    			insert_dev(target, button, anchor);
+
+    			if (!mounted) {
+    				dispose = listen_dev(button, "click", launchWitchcraft, false, false, false);
+    				mounted = true;
+    			}
+    		},
+    		p: noop,
+    		d: function destroy(detaching) {
+    			if (detaching) detach_dev(button);
+    			mounted = false;
+    			dispose();
+    		}
+    	};
+
+    	dispatch_dev("SvelteRegisterBlock", {
+    		block,
+    		id: create_else_block.name,
+    		type: "else",
+    		source: "(27:0) {:else}",
+    		ctx
+    	});
+
+    	return block;
+    }
+
+    // (22:0) {#if !witchCraftInstalled}
+    function create_if_block(ctx) {
+    	let button;
+    	let t1;
+    	let if_block_anchor;
+    	let mounted;
+    	let dispose;
+    	let if_block = /*witchcraftDownloading*/ ctx[0] && create_if_block_1(ctx);
+
+    	const block = {
+    		c: function create() {
+    			button = element("button");
+    			button.textContent = "installer witchcraft";
     			t1 = space();
+    			if (if_block) if_block.c();
+    			if_block_anchor = empty();
+    			add_location(button, file, 22, 4, 670);
+    		},
+    		m: function mount(target, anchor) {
+    			insert_dev(target, button, anchor);
+    			insert_dev(target, t1, anchor);
+    			if (if_block) if_block.m(target, anchor);
+    			insert_dev(target, if_block_anchor, anchor);
+
+    			if (!mounted) {
+    				dispose = listen_dev(button, "click", /*installWitchcraft*/ ctx[2], false, false, false);
+    				mounted = true;
+    			}
+    		},
+    		p: function update(ctx, dirty) {
+    			if (/*witchcraftDownloading*/ ctx[0]) {
+    				if (if_block) ; else {
+    					if_block = create_if_block_1(ctx);
+    					if_block.c();
+    					if_block.m(if_block_anchor.parentNode, if_block_anchor);
+    				}
+    			} else if (if_block) {
+    				if_block.d(1);
+    				if_block = null;
+    			}
+    		},
+    		d: function destroy(detaching) {
+    			if (detaching) detach_dev(button);
+    			if (detaching) detach_dev(t1);
+    			if (if_block) if_block.d(detaching);
+    			if (detaching) detach_dev(if_block_anchor);
+    			mounted = false;
+    			dispose();
+    		}
+    	};
+
+    	dispatch_dev("SvelteRegisterBlock", {
+    		block,
+    		id: create_if_block.name,
+    		type: "if",
+    		source: "(22:0) {#if !witchCraftInstalled}",
+    		ctx
+    	});
+
+    	return block;
+    }
+
+    // (24:4) {#if witchcraftDownloading}
+    function create_if_block_1(ctx) {
+    	let t;
+
+    	const block = {
+    		c: function create() {
+    			t = text("installation en cours");
+    		},
+    		m: function mount(target, anchor) {
+    			insert_dev(target, t, anchor);
+    		},
+    		d: function destroy(detaching) {
+    			if (detaching) detach_dev(t);
+    		}
+    	};
+
+    	dispatch_dev("SvelteRegisterBlock", {
+    		block,
+    		id: create_if_block_1.name,
+    		type: "if",
+    		source: "(24:4) {#if witchcraftDownloading}",
+    		ctx
+    	});
+
+    	return block;
+    }
+
+    function create_fragment(ctx) {
+    	let p;
+    	let t1;
+    	let if_block_anchor;
+
+    	function select_block_type(ctx, dirty) {
+    		if (!/*witchCraftInstalled*/ ctx[1]) return create_if_block;
+    		return create_else_block;
+    	}
+
+    	let current_block_type = select_block_type(ctx);
+    	let if_block = current_block_type(ctx);
+
+    	const block = {
+    		c: function create() {
     			p = element("p");
-    			p.textContent = "mis a jour :D";
-    			attr_dev(a, "href", "./test.html");
-    			add_location(a, file, 6, 0, 140);
-    			add_location(p, file, 7, 0, 172);
+    			p.textContent = "witchcraft";
+    			t1 = space();
+    			if_block.c();
+    			if_block_anchor = empty();
+    			add_location(p, file, 20, 0, 619);
     		},
     		l: function claim(nodes) {
     			throw new Error("options.hydrate only works if the component was compiled with the `hydratable: true` option");
     		},
     		m: function mount(target, anchor) {
-    			insert_dev(target, a, anchor);
-    			insert_dev(target, t1, anchor);
     			insert_dev(target, p, anchor);
+    			insert_dev(target, t1, anchor);
+    			if_block.m(target, anchor);
+    			insert_dev(target, if_block_anchor, anchor);
     		},
-    		p: noop,
+    		p: function update(ctx, [dirty]) {
+    			if (current_block_type === (current_block_type = select_block_type(ctx)) && if_block) {
+    				if_block.p(ctx, dirty);
+    			} else {
+    				if_block.d(1);
+    				if_block = current_block_type(ctx);
+
+    				if (if_block) {
+    					if_block.c();
+    					if_block.m(if_block_anchor.parentNode, if_block_anchor);
+    				}
+    			}
+    		},
     		i: noop,
     		o: noop,
     		d: function destroy(detaching) {
-    			if (detaching) detach_dev(a);
-    			if (detaching) detach_dev(t1);
     			if (detaching) detach_dev(p);
+    			if (detaching) detach_dev(t1);
+    			if_block.d(detaching);
+    			if (detaching) detach_dev(if_block_anchor);
     		}
     	};
 
@@ -353,13 +508,26 @@
     	return block;
     }
 
-    function instance($$self, $$props) {
+    function launchWitchcraft() {
+    	window.games.launch("witch_craft");
+    }
+
+    function instance($$self, $$props, $$invalidate) {
     	let { $$slots: slots = {}, $$scope } = $$props;
     	validate_slots("Src", slots, []);
+    	let witchcraftDownloading = false;
+    	let witchCraftInstalling = false;
+    	let witchCraftInstalled = window.games.getDataForGame("witch_craft").installed || false;
 
     	window.api.receive("fromMain", data => {
     		console.log(`Received ${data} from main process`);
+    		if (data.event === "install" && data.step === "complete") $$invalidate(1, witchCraftInstalled = true);
     	});
+
+    	function installWitchcraft() {
+    		window.games.install("witch_craft");
+    		$$invalidate(0, witchcraftDownloading = true);
+    	}
 
     	const writable_props = [];
 
@@ -367,7 +535,25 @@
     		if (!~writable_props.indexOf(key) && key.slice(0, 2) !== "$$") console_1.warn(`<Src> was created with unknown prop '${key}'`);
     	});
 
-    	return [];
+    	$$self.$capture_state = () => ({
+    		witchcraftDownloading,
+    		witchCraftInstalling,
+    		witchCraftInstalled,
+    		installWitchcraft,
+    		launchWitchcraft
+    	});
+
+    	$$self.$inject_state = $$props => {
+    		if ("witchcraftDownloading" in $$props) $$invalidate(0, witchcraftDownloading = $$props.witchcraftDownloading);
+    		if ("witchCraftInstalling" in $$props) witchCraftInstalling = $$props.witchCraftInstalling;
+    		if ("witchCraftInstalled" in $$props) $$invalidate(1, witchCraftInstalled = $$props.witchCraftInstalled);
+    	};
+
+    	if ($$props && "$$inject" in $$props) {
+    		$$self.$inject_state($$props.$$inject);
+    	}
+
+    	return [witchcraftDownloading, witchCraftInstalled, installWitchcraft];
     }
 
     class Src extends SvelteComponentDev {

@@ -152,6 +152,7 @@ createWindow = (preload = true) => {
 		height: 860,
 		webPreferences: {
 			contextIsolation: true,
+			enableRemoteModule: true, // todo remove this and readonly from json in preload.js
 			preload: path.join(app.getAppPath(), 'electron/preload.js')
 		}
 	});
@@ -189,6 +190,9 @@ createMainWindow = () => {
 		// });
 	});
 };
+
+// IPC MAIN
+
 
 app.on('ready', () => {
 	createMainWindow();
