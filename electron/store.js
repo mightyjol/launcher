@@ -1,7 +1,10 @@
 const fs = require('fs')
+const path = require('path')
+const remote = require("electron").remote;
 
-let configPath = "config.json"
- 
+let base = remote.app.getAppPath()
+let configPath = path.join(base, "/config.json")
+console.log(configPath)
 module.exports = {
     set: function(key, object){
         let config = JSON.parse(fs.readFileSync(configPath))
