@@ -5,8 +5,8 @@ let defaults = {
     witch_craft: { installed: false }
 }
 
-fs.readFile(configPath, (err) => {
-    if(err) fs.writeFile(configPath, JSON.stringify(defaults), () => {})
+fs.readFileSync(configPath, (err) => {
+    if(err) fs.writeFileSync(configPath, JSON.stringify(defaults), () => {})
 }) 
  
 module.exports = {

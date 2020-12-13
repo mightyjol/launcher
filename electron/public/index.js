@@ -459,7 +459,7 @@
     	const block = {
     		c: function create() {
     			p = element("p");
-    			p.textContent = "witchcraft - le jeu";
+    			p.textContent = "witchcraft - LE jeu";
     			t1 = space();
     			if_block.c();
     			if_block_anchor = empty();
