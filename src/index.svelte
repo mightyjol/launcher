@@ -34,7 +34,7 @@
     }
 </script>
 
-<p>witchcraft - 41e essai</p>
+<p>witchcraft - 43e essai</p>
 {#if !witchCraftInstalled}
     <button on:click={installWitchcraft} >installer le jeu</button>
     {#if witchcraftDownloading}
