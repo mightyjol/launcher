@@ -49,14 +49,12 @@ module.exports = function(name){
             let dest = fs.createWriteStream(`tmp/${name}-${file.name}`);
             let progress = Progress({time:100, length: file.size})
             
-            progress.on('progress', function(progress) {
-                mainWindow.webContents.send('fromMain', { event: 'install', step: 'download', progress: progress.percentage.toFixed(2), game: name })
-            });
-            
             drive.files.get({
                 fileId: file.id,
                 alt: 'media'
-            }, { responseType: 'stream' }).then( res => {
+            }, { responseType: 'stream' })
+            .then( res => {
+                console.log(res)
                 res.data
                   .on("end", () => {
                     installFromTmp(name, file)
@@ -66,6 +64,11 @@ module.exports = function(name){
                   })
                   .pipe(progress).pipe(dest);
             })
+            .catch(e => { console.error(e) })
+
+            progress.on('progress', function(progress) {
+                mainWindow.webContents.send('fromMain', { event: 'install', step: 'download', progress: progress.percentage.toFixed(2), game: name })
+            });
         } else {
             console.log('No files found.');
         }

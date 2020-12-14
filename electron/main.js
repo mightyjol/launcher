@@ -53,14 +53,12 @@ function handleSquirrelEvent() {
 		//   explorer context menus
 		
 		let defaults = JSON.stringify({
-			witch_craft:
-				{
-					installed:false,
-					path:null,
-					patches:[]
-				}
+			witch_craft:{
+				installed:false,
+				path:null,
+				patches:[]
 			}
-		)
+		})
         fs.writeFileSync(path.join(app.getAppPath(), "/config.json"), defaults, () => {})
 		
 		console.log("update complete")
@@ -105,6 +103,7 @@ const feed = `${server}/update/${process.platform}/${app.getVersion()}`
 autoUpdater.setFeedURL(feed)
 
 if(fs.existsSync(path.resolve(path.dirname(process.execPath), '..', 'update.exe'))){
+	console.log('checking update')
 	if(mainWindow) mainWindow.webContents.send('fromMain', 'check updates')
 
 	checkUpdateInterval = setInterval(() => {
@@ -113,16 +112,15 @@ if(fs.existsSync(path.resolve(path.dirname(process.execPath), '..', 'update.exe'
 }
 
 autoUpdater.on('update-available', (event) => {
-	if(mainWindow) mainWindow.webContents.send('fromMain', 'update found')
-	clearInterval(checkUpdateInterval)
+	if(mainWindow) mainWindow.webContents.send('fromMain', { event: 'update', step: 'not-found' })
 })
 
 autoUpdater.on('update-not-available', (event) => {
-	if(mainWindow) mainWindow.webContents.send('fromMain', 'no update')
+	if(mainWindow) mainWindow.webContents.send('fromMain', { event: 'update', step: 'found' })
 })
 
 autoUpdater.on('download-progress', (progressObj) => {
-	if(mainWindow) mainWindow.webContents.send('fromMain', 'Downloaded ' + progressObj.percent + '%')
+	if(mainWindow) mainWindow.webContents.send('fromMain', { event: 'update', step: 'download', progress: progressObj.percent })
 })
 
 autoUpdater.on('update-downloaded', (event, releaseNotes, releaseName) => {
@@ -133,7 +131,7 @@ autoUpdater.on('update-downloaded', (event, releaseNotes, releaseName) => {
 	  message: process.platform === 'win32' ? releaseNotes : releaseName,
 	  detail: 'A new version has been downloaded. Restart the application to apply the updates.'
 	}
-	if(mainWindow) mainWindow.webContents.send('fromMain', 'update downloaded')
+	if(mainWindow) mainWindow.webContents.send('fromMain', {event: 'update', step: 'complete'})
 	
 	dialog.showMessageBox(dialogOpts).then((returnValue) => {
 	  if (returnValue.response === 0) autoUpdater.quitAndInstall()

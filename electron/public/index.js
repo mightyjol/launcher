@@ -315,7 +315,7 @@
     const { console: console_1 } = globals;
     const file = "src\\index.svelte";
 
-    // (35:0) {:else}
+    // (43:0) {:else}
     function create_else_block(ctx) {
     	let button;
     	let mounted;
@@ -325,7 +325,7 @@
     		c: function create() {
     			button = element("button");
     			button.textContent = "Lancer THE jeu";
-    			add_location(button, file, 35, 4, 1237);
+    			add_location(button, file, 43, 4, 1718);
     		},
     		m: function mount(target, anchor) {
     			insert_dev(target, button, anchor);
@@ -347,14 +347,14 @@
     		block,
     		id: create_else_block.name,
     		type: "else",
-    		source: "(35:0) {:else}",
+    		source: "(43:0) {:else}",
     		ctx
     	});
 
     	return block;
     }
 
-    // (30:0) {#if !witchCraftInstalled}
+    // (38:0) {#if !witchCraftInstalled}
     function create_if_block(ctx) {
     	let button;
     	let t1;
@@ -370,7 +370,7 @@
     			t1 = space();
     			if (if_block) if_block.c();
     			if_block_anchor = empty();
-    			add_location(button, file, 30, 4, 1080);
+    			add_location(button, file, 38, 4, 1561);
     		},
     		m: function mount(target, anchor) {
     			insert_dev(target, button, anchor);
@@ -409,14 +409,14 @@
     		block,
     		id: create_if_block.name,
     		type: "if",
-    		source: "(30:0) {#if !witchCraftInstalled}",
+    		source: "(38:0) {#if !witchCraftInstalled}",
     		ctx
     	});
 
     	return block;
     }
 
-    // (32:4) {#if witchcraftDownloading}
+    // (40:4) {#if witchcraftDownloading}
     function create_if_block_1(ctx) {
     	let t;
 
@@ -436,7 +436,7 @@
     		block,
     		id: create_if_block_1.name,
     		type: "if",
-    		source: "(32:4) {#if witchcraftDownloading}",
+    		source: "(40:4) {#if witchcraftDownloading}",
     		ctx
     	});
 
@@ -463,7 +463,7 @@
     			t1 = space();
     			if_block.c();
     			if_block_anchor = empty();
-    			add_location(p, file, 28, 0, 1026);
+    			add_location(p, file, 36, 0, 1507);
     		},
     		l: function claim(nodes) {
     			throw new Error("options.hydrate only works if the component was compiled with the `hydratable: true` option");
@@ -530,6 +530,14 @@
     				$$invalidate(1, witchCraftInstalled = true);
     				console.log("installation complete");
     			}
+    		}
+
+    		if (data.event === "update") {
+    			if (data.step === "start") console.log("preparing launcher update");
+    			if (data.step === "found") console.log("launcher update not found");
+    			if (data.step === "not-found") console.log("launcher update found");
+    			if (data.step === "download") console.log("downloading launcher update " + data.progress + "%");
+    			if (data.step === "complete") console.log("launcher update complete");
     		}
     	});
 
