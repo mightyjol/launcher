@@ -33,5 +33,5 @@
         installation en cours
     {/if}
 {:else}
-    <button on:click={launchWitchcraft}>Lancer le jeu</button>
+    <button on:click={launchWitchcraft}>Lancer THE jeu</button>
 {/if}

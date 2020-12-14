@@ -324,7 +324,7 @@
     	const block = {
     		c: function create() {
     			button = element("button");
-    			button.textContent = "Lancer le jeu";
+    			button.textContent = "Lancer THE jeu";
     			add_location(button, file, 35, 4, 1243);
     		},
     		m: function mount(target, anchor) {

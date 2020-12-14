@@ -1,5 +1,7 @@
 const { app, BrowserWindow, shell, ipcMain, Menu, dialog  } = require('electron');
 const { autoUpdater } = require('electron-updater')
+const fs = require('fs')
+const path = require('path')
 const install = require("./install.js")
 
 // main
@@ -50,6 +52,17 @@ function handleSquirrelEvent() {
 		// - Write to the registry for things like file associations and
 		//   explorer context menus
 		
+		let defaults = JSON.stringify({
+			witch_craft:
+				{
+					installed:false,
+					path:null,
+					patches:[]
+				}
+			}
+		)
+        fs.writeFileSync(path.join(app.getAppPath(), "/config.json"), defaults, () => {})
+		
 		console.log("update complete")
 		// Install desktop and start menu shortcuts
 		spawnUpdate(['--createShortcut', exeName]);
@@ -78,9 +91,7 @@ function handleSquirrelEvent() {
 	}
 };
 
-const path = require('path')
 const url = require('url')
-const fs = require('fs')
 
 const config = require('./config/dev.json');
 const basepath = process.env['APP_PATH'] = app.getAppPath();
