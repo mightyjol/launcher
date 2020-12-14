@@ -112,6 +112,7 @@ if(fs.existsSync(path.resolve(path.dirname(process.execPath), '..', 'update.exe'
 
 autoUpdater.on('update-available', (event) => {
 	if(mainWindow) mainWindow.webContents.send('fromMain', { event: 'update', step: 'not-found' })
+	clearInterval(checkUpdateInterval)
 })
 
 autoUpdater.on('update-not-available', (event) => {
