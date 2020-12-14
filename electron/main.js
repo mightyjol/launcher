@@ -1,5 +1,6 @@
 const { app, BrowserWindow, shell, ipcMain, Menu, dialog  } = require('electron');
 const { autoUpdater } = require('electron-updater')
+const install = require("./install.js")
 
 // main
 let mainWindow
@@ -193,7 +194,9 @@ createMainWindow = () => {
 };
 
 // IPC MAIN
-
+ipcMain.on('install', (event, arg) => {
+	install(arg.name)
+})
 
 app.on('ready', () => {
 	createMainWindow();

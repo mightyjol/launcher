@@ -2,7 +2,6 @@ const {
     contextBridge,
     ipcRenderer
 } = require("electron");
-const install = require("./install.js")
 const launch = require("./launch.js")
 const store = require('./store.js')
 
@@ -35,7 +34,7 @@ contextBridge.exposeInMainWorld(
             }
         },
         install: (name) => {
-            return install(name)
+            return ipcRenderer.send('install', {name});
         },
         launch: (name) => {
             return launch(name)

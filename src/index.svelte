@@ -4,8 +4,16 @@
     let witchCraftInstalled = window.games.getDataForGame('witch_craft').installed || false
 
     window.api.receive("fromMain", (data) => {
-        console.log(`Received ${data} from main process`);
-        if(data.event === 'install' && data.step === 'complete') witchCraftInstalled = true
+        if(data.event === 'install'){
+            if(data.step === 'start') console.log('preparing installation')
+            if(data.step === 'download') console.log('downloading ' + data.progress + '%')
+            if(data.step === 'installation-start') console.log('starting installation')
+            if(data.step === 'installation') console.log('installing ' + data.progress + '%')
+            if(data.step === 'complete') {
+                witchCraftInstalled = true
+                console.log('installation complete')
+            }
+        }
     });
 
     function installWitchcraft(){

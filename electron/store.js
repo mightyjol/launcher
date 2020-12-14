@@ -1,8 +1,9 @@
 const fs = require('fs')
 const path = require('path')
 const remote = require("electron").remote;
+const { app } = require('electron')
 
-let base = remote.app.getAppPath()
+let base = app ? app.getAppPath() : remote.app.getAppPath()
 let configPath = path.join(base, "/config.json")
 console.log(configPath)
 module.exports = {

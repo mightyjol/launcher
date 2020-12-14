@@ -12,7 +12,7 @@ const store = require('./store.js')
 const Progress = require('progress-stream');
 const fs = require('fs')
 const unzip = require('unzipper');
-const remote = require("electron").remote;
+const { BrowserWindow } = require("electron");
 const dev = process.env.NODE_ENV === 'development';
 
 //console.log(credentials)
@@ -30,9 +30,12 @@ module.exports = function(name){
     console.log('installing ' + name)
 
     if(!games[name]) return
+
+    let mainWindow = BrowserWindow.getAllWindows()[0]
     let game = games[name]
     let latest = game.versions[game.versions.length - 1]
 
+    mainWindow.webContents.send('fromMain', { event: 'install', step: 'start' })
     drive.files.list({
         q: `name='${latest}.zip'`,
         pageSize: 2,
@@ -43,14 +46,17 @@ module.exports = function(name){
         if (files.length) {
             createFolderIfNotExists('tmp')
             let file = files[0]
-            console.log(file)
             let dest = fs.createWriteStream(`tmp/${name}-${file.name}`);
             let progress = Progress({time:100, length: file.size})
-
+            
+            progress.on('progress', function(progress) {
+                mainWindow.webContents.send('fromMain', { event: 'install', step: 'download', progress: progress.percentage.toFixed(2), game: name })
+            });
+            
             drive.files.get({
                 fileId: file.id,
                 alt: 'media'
-            },{ responseType: 'stream' }, function(err, res) {
+            }, { responseType: 'stream' }).then( res => {
                 res.data
                   .on("end", () => {
                     installFromTmp(name, file)
@@ -59,12 +65,7 @@ module.exports = function(name){
                     console.log("Error during download", err);
                   })
                   .pipe(progress).pipe(dest);
-            } )
-                 
-            
-            progress.on('progress', function(progress) {
-                console.log('download in progress ' + progress.percentage.toFixed(2) + '%')
-            });
+            })
         } else {
             console.log('No files found.');
         }
@@ -72,17 +73,15 @@ module.exports = function(name){
 }
 
 function installFromTmp(game, file){
+    let mainWindow = BrowserWindow.getAllWindows()[0]
     createFolderIfNotExists(game)
     let progress = Progress({time:100, length: file.size})
     let filepath = `tmp/${game}-${file.name}`
+
+    mainWindow.webContents.send('fromMain', { event: 'install', step: 'installation-start', game })
+
     fs.createReadStream(filepath)
         .on('end', () => {
-            console.log('install complete')
-            
-            if(dev){
-                // write to local file
-            }
-            console.log('updating store')
             let data = {
                 installed: true,
                 version: file.name.replace('.zip', ''),
@@ -90,19 +89,16 @@ function installFromTmp(game, file){
                 patches: []
             }
             store.set(game, data)
-            console.log('store updated')
 
-            console.log('sending message to window')
-            remote.getCurrentWebContents().send('fromMain', { event: 'install', step: 'complete' })
-            console.log('unlinking file')
+            mainWindow.webContents.send('fromMain', { event: 'install', step: 'complete' })
+
             fs.unlinkSync(filepath)
-            console.log('file unlinked')
         })
         .pipe(progress)
         .pipe(unzip.Extract({ path: game }));
 
     progress.on('progress', function(progress) {
-        console.log('installation in progress ' + progress.percentage.toFixed(2) + '%')
+        mainWindow.webContents.send('fromMain', { event: 'install', step: 'installation', progress: progress.percentage.toFixed(2), game })
     });
 }
 
