@@ -70,8 +70,11 @@ function handleSquirrelEvent() {
 				patches:[]
 			}
 		})
-        fs.writeFileSync(path.join(path.dirname(process.execPath), '..', "/config.json"), defaults, () => {})
-		
+		let configPath = path.join(path.dirname(process.execPath), '..', "/config.json")
+		if (!fs.existsSync(configPath)) {
+			fs.writeFileSync(configPath, defaults, () => {})
+		}
+        
 		console.log("update complete")
 		// Install desktop and start menu shortcuts
 		spawnUpdate(['--createShortcut', exeName]);
