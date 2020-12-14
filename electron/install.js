@@ -11,9 +11,9 @@ const credentials = require('./google.json');
 const store = require('./store.js')
 const Progress = require('progress-stream');
 const fs = require('fs')
+const path = require('path')
 const unzip = require('unzipper');
 const { BrowserWindow } = require("electron");
-const dev = process.env.NODE_ENV === 'development';
 
 //console.log(credentials)
 const scopes = [
@@ -77,7 +77,9 @@ module.exports = function(name){
 
 function installFromTmp(game, file){
     let mainWindow = BrowserWindow.getAllWindows()[0]
-    createFolderIfNotExists(game)
+    let folder = path.join(path.dirname(process.execPath), '..', game)
+    if(process.env.NODE_ENV === 'development') folder = game
+    createFolderIfNotExists(folder)
     let progress = Progress({time:100, length: file.size})
     let filepath = `tmp/${game}-${file.name}`
 
@@ -98,7 +100,7 @@ function installFromTmp(game, file){
             fs.unlinkSync(filepath)
         })
         .pipe(progress)
-        .pipe(unzip.Extract({ path: game }));
+        .pipe(unzip.Extract({ path: folder }));
 
     progress.on('progress', function(progress) {
         mainWindow.webContents.send('fromMain', { event: 'install', step: 'installation', progress: progress.percentage.toFixed(2), game })

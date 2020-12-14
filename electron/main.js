@@ -2,6 +2,7 @@ const { app, BrowserWindow, shell, ipcMain, Menu, dialog, autoUpdater  } = requi
 const fs = require('fs')
 const path = require('path')
 const install = require("./install.js")
+const dev = process.env.NODE_ENV === 'development';
 
 // main
 let mainWindow
@@ -15,6 +16,17 @@ if (handleSquirrelEvent()) {
 	// squirrel event handled and app will exit in 1000ms, so don't do anything else
 	return;
 }
+
+// if(dev){
+// 	let defaults = JSON.stringify({
+// 		witch_craft:{
+// 			installed:false,
+// 			path:null,
+// 			patches:[]
+// 		}
+// 	})
+// 	fs.writeFileSync(path.join("./config.json"), defaults, () => {})
+// }
 
 function handleSquirrelEvent() {
 	if (process.argv.length === 1) {
@@ -58,7 +70,7 @@ function handleSquirrelEvent() {
 				patches:[]
 			}
 		})
-        fs.writeFileSync(path.join(app.getAppPath(), "/config.json"), defaults, () => {})
+        fs.writeFileSync(path.join(path.dirname(process.execPath), '..', "/config.json"), defaults, () => {})
 		
 		console.log("update complete")
 		// Install desktop and start menu shortcuts
@@ -92,7 +104,6 @@ const url = require('url')
 
 const config = require('./config/dev.json');
 const basepath = process.env['APP_PATH'] = app.getAppPath();
-const dev = process.env.NODE_ENV === 'development';
 const loadUrl = "static/index.html";
 
 // auto updates
