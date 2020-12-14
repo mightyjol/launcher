@@ -1,5 +1,4 @@
-const { app, BrowserWindow, shell, ipcMain, Menu, dialog  } = require('electron');
-const { autoUpdater } = require('electron-updater')
+const { app, BrowserWindow, shell, ipcMain, Menu, dialog, autoUpdater  } = require('electron');
 const fs = require('fs')
 const path = require('path')
 const install = require("./install.js")
