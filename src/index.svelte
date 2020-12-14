@@ -36,7 +36,7 @@
 
 <p>witchcraft :D</p>
 {#if !witchCraftInstalled}
-    <button on:click={installWitchcraft} >installer witchcraft</button>
+    <button on:click={installWitchcraft} >qsdfqsdfqdst</button>
     {#if witchcraftDownloading}
         installation en cours
     {/if}

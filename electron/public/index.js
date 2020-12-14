@@ -325,7 +325,7 @@
     		c: function create() {
     			button = element("button");
     			button.textContent = "Lancer THE jeu";
-    			add_location(button, file, 43, 4, 1718);
+    			add_location(button, file, 43, 4, 1710);
     		},
     		m: function mount(target, anchor) {
     			insert_dev(target, button, anchor);
@@ -366,7 +366,7 @@
     	const block = {
     		c: function create() {
     			button = element("button");
-    			button.textContent = "installer witchcraft";
+    			button.textContent = "qsdfqsdfqdst";
     			t1 = space();
     			if (if_block) if_block.c();
     			if_block_anchor = empty();
