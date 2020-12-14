@@ -26,7 +26,7 @@
     }
 </script>
 
-<p>witchcraft - LE jeu</p>
+<p>witchcraft :D</p>
 {#if !witchCraftInstalled}
     <button on:click={installWitchcraft} >installer witchcraft</button>
     {#if witchcraftDownloading}
