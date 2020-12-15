@@ -50,6 +50,8 @@
 
                 games[data.game].installed = true
                 games[data.game].cleanup = false
+                games[data.game].needsUpdate = false
+                games[data.game].version = window.games.getDataForGame(data.game).version
                 if(games[data.game].installed) games[data.game].updating = false
                 else games[data.game].installing = false
 
@@ -122,7 +124,7 @@
     <p>a launcher update is downloading</p>
 {/if}
 
-<p>witchcraft - 44e essai</p>
+<p>witchcraft - 46e essai</p>
 {#if !games['witch_craft'].installed}
     <button on:click={() => install('witch_craft')} >installer le jeu</button>
     {#if games['witch_craft'].downloading}

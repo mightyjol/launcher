@@ -125,12 +125,12 @@ if(fs.existsSync(path.resolve(path.dirname(process.execPath), '..', 'update.exe'
 }
 
 autoUpdater.on('update-available', (event) => {
-	if(mainWindow) mainWindow.webContents.send('fromMain', { event: 'update-launcher', step: 'not-found' })
+	if(mainWindow) mainWindow.webContents.send('fromMain', { event: 'update-launcher', step: 'found' })
 	clearInterval(checkUpdateInterval)
 })
 
 autoUpdater.on('update-not-available', (event) => {
-	if(mainWindow) mainWindow.webContents.send('fromMain', { event: 'update-launcher', step: 'found' })
+	if(mainWindow) mainWindow.webContents.send('fromMain', { event: 'update-launcher', step: 'not-found' })
 })
 
 autoUpdater.on('download-progress', (progressObj) => {

@@ -1,7 +1,7 @@
 {
   "name": "launcher",
   "description": "cool launcher",
-  "version": "0.0.45",
+  "version": "0.0.46",
   "license": "MIT",
   "author": "mighty",
   "main": "electron/main.js",

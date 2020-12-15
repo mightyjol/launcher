@@ -330,7 +330,7 @@
     const { console: console_1 } = globals;
     const file = "src\\index.svelte";
 
-    // (121:0) {#if launcher.updateFound}
+    // (123:0) {#if launcher.updateFound}
     function create_if_block_5(ctx) {
     	let p;
 
@@ -338,7 +338,7 @@
     		c: function create() {
     			p = element("p");
     			p.textContent = "a launcher update is downloading";
-    			add_location(p, file, 121, 4, 4456);
+    			add_location(p, file, 123, 4, 4601);
     		},
     		m: function mount(target, anchor) {
     			insert_dev(target, p, anchor);
@@ -352,14 +352,14 @@
     		block,
     		id: create_if_block_5.name,
     		type: "if",
-    		source: "(121:0) {#if launcher.updateFound}",
+    		source: "(123:0) {#if launcher.updateFound}",
     		ctx
     	});
 
     	return block;
     }
 
-    // (141:4) {:else}
+    // (143:4) {:else}
     function create_else_block_1(ctx) {
     	let button;
     	let mounted;
@@ -369,7 +369,7 @@
     		c: function create() {
     			button = element("button");
     			button.textContent = "Lancer THE jeu";
-    			add_location(button, file, 141, 8, 5103);
+    			add_location(button, file, 143, 8, 5248);
     		},
     		m: function mount(target, anchor) {
     			insert_dev(target, button, anchor);
@@ -391,14 +391,14 @@
     		block,
     		id: create_else_block_1.name,
     		type: "else",
-    		source: "(141:4) {:else}",
+    		source: "(143:4) {:else}",
     		ctx
     	});
 
     	return block;
     }
 
-    // (139:43) 
+    // (141:43) 
     function create_if_block_4(ctx) {
     	let p;
 
@@ -406,7 +406,7 @@
     		c: function create() {
     			p = element("p");
     			p.textContent = "cleaning up";
-    			add_location(p, file, 139, 8, 5062);
+    			add_location(p, file, 141, 8, 5207);
     		},
     		m: function mount(target, anchor) {
     			insert_dev(target, p, anchor);
@@ -421,14 +421,14 @@
     		block,
     		id: create_if_block_4.name,
     		type: "if",
-    		source: "(139:43) ",
+    		source: "(141:43) ",
     		ctx
     	});
 
     	return block;
     }
 
-    // (132:4) {#if games['witch_craft'].updating}
+    // (134:4) {#if games['witch_craft'].updating}
     function create_if_block_2(ctx) {
     	let if_block_anchor;
 
@@ -472,14 +472,14 @@
     		block,
     		id: create_if_block_2.name,
     		type: "if",
-    		source: "(132:4) {#if games['witch_craft'].updating}",
+    		source: "(134:4) {#if games['witch_craft'].updating}",
     		ctx
     	});
 
     	return block;
     }
 
-    // (126:0) {#if !games['witch_craft'].installed}
+    // (128:0) {#if !games['witch_craft'].installed}
     function create_if_block(ctx) {
     	let button;
     	let t1;
@@ -495,7 +495,7 @@
     			t1 = space();
     			if (if_block) if_block.c();
     			if_block_anchor = empty();
-    			add_location(button, file, 126, 4, 4580);
+    			add_location(button, file, 128, 4, 4725);
     		},
     		m: function mount(target, anchor) {
     			insert_dev(target, button, anchor);
@@ -534,14 +534,14 @@
     		block,
     		id: create_if_block.name,
     		type: "if",
-    		source: "(126:0) {#if !games['witch_craft'].installed}",
+    		source: "(128:0) {#if !games['witch_craft'].installed}",
     		ctx
     	});
 
     	return block;
     }
 
-    // (135:8) {:else}
+    // (137:8) {:else}
     function create_else_block(ctx) {
     	let p0;
     	let t1;
@@ -558,8 +558,8 @@
     			p1 = element("p");
     			t2 = text(t2_value);
     			t3 = text("%");
-    			add_location(p0, file, 135, 12, 4912);
-    			add_location(p1, file, 136, 12, 4953);
+    			add_location(p0, file, 137, 12, 5057);
+    			add_location(p1, file, 138, 12, 5098);
     		},
     		m: function mount(target, anchor) {
     			insert_dev(target, p0, anchor);
@@ -582,14 +582,14 @@
     		block,
     		id: create_else_block.name,
     		type: "else",
-    		source: "(135:8) {:else}",
+    		source: "(137:8) {:else}",
     		ctx
     	});
 
     	return block;
     }
 
-    // (133:8) {#if games['witch_craft'].progress === 0}
+    // (135:8) {#if games['witch_craft'].progress === 0}
     function create_if_block_3(ctx) {
     	let p;
 
@@ -597,7 +597,7 @@
     		c: function create() {
     			p = element("p");
     			p.textContent = "checking for update";
-    			add_location(p, file, 133, 12, 4855);
+    			add_location(p, file, 135, 12, 5000);
     		},
     		m: function mount(target, anchor) {
     			insert_dev(target, p, anchor);
@@ -612,14 +612,14 @@
     		block,
     		id: create_if_block_3.name,
     		type: "if",
-    		source: "(133:8) {#if games['witch_craft'].progress === 0}",
+    		source: "(135:8) {#if games['witch_craft'].progress === 0}",
     		ctx
     	});
 
     	return block;
     }
 
-    // (128:4) {#if games['witch_craft'].downloading}
+    // (130:4) {#if games['witch_craft'].downloading}
     function create_if_block_1(ctx) {
     	let t;
 
@@ -639,7 +639,7 @@
     		block,
     		id: create_if_block_1.name,
     		type: "if",
-    		source: "(128:4) {#if games['witch_craft'].downloading}",
+    		source: "(130:4) {#if games['witch_craft'].downloading}",
     		ctx
     	});
 
@@ -668,11 +668,11 @@
     			if (if_block0) if_block0.c();
     			t0 = space();
     			p = element("p");
-    			p.textContent = "witchcraft - 44e essai";
+    			p.textContent = "witchcraft - 46e essai";
     			t2 = space();
     			if_block1.c();
     			if_block1_anchor = empty();
-    			add_location(p, file, 124, 0, 4506);
+    			add_location(p, file, 126, 0, 4651);
     		},
     		l: function claim(nodes) {
     			throw new Error("options.hydrate only works if the component was compiled with the `hydratable: true` option");
@@ -781,6 +781,8 @@
     				console.log("installation complete");
     				$$invalidate(1, games[data.game].installed = true, games);
     				$$invalidate(1, games[data.game].cleanup = false, games);
+    				$$invalidate(1, games[data.game].needsUpdate = false, games);
+    				$$invalidate(1, games[data.game].version = window.games.getDataForGame(data.game).version, games);
     				if (games[data.game].installed) $$invalidate(1, games[data.game].updating = false, games); else $$invalidate(1, games[data.game].installing = false, games);
     				if (games[data.game].wantsToLaunch) window.games.launch(data.game);
     			}
