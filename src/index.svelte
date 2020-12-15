@@ -62,10 +62,10 @@
         if(data.event === 'update-launcher'){
             if(data.step === 'start') { console.log('preparing launcher update') }
             if(data.step === 'found') {
-                console.log('launcher update not found')
+                console.log('launcher update found')
                 launcher.updateFound = true
             }
-            if(data.step === 'not-found') console.log('launcher update found')
+            if(data.step === 'not-found') console.log('launcher update not found')
             if(data.step === 'download') console.log('downloading launcher update ' + data.progress + '%')
             if(data.step === 'complete') { console.log('launcher update complete') }
             launcher = {...launcher}
@@ -129,6 +129,7 @@
     <button on:click={() => install('witch_craft')} >installer le jeu</button>
     {#if games['witch_craft'].downloading}
         installation en cours
+        <p>{games['witch_craft'].progress}%</p>
     {/if}
 {:else}
     {#if games['witch_craft'].updating}

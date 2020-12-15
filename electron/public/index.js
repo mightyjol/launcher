@@ -794,11 +794,11 @@
     			}
 
     			if (data.step === "found") {
-    				console.log("launcher update not found");
+    				console.log("launcher update found");
     				$$invalidate(0, launcher.updateFound = true, launcher);
     			}
 
-    			if (data.step === "not-found") console.log("launcher update found");
+    			if (data.step === "not-found") console.log("launcher update not found");
     			if (data.step === "download") console.log("downloading launcher update " + data.progress + "%");
 
     			if (data.step === "complete") {
