@@ -147,8 +147,7 @@ function needsUpdate(game, version){
                 let patchesToInstall = []
                 let appFolder = path.resolve(process.execPath, '..');
                 let pathToPak = [game, version, game, 'Content', 'Paks']
-                let gameFolder = dev ? path.resolve(app.getAppPath(), ...pathToPak) : path.resolve(appFolder, ...pathToPak)
-                console.log(gameFolder)
+                let gameFolder = dev ? path.resolve(app.getAppPath(), ...pathToPak) : path.resolve(appFolder, '..', ...pathToPak)
                 fs.readdir(
                     gameFolder,
                     (err, files) => {
