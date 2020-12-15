@@ -36,6 +36,9 @@ contextBridge.exposeInMainWorld(
         install: (name) => {
             return ipcRenderer.send('install', {name});
         },
+        needsUpdate: (name, version) => {
+            return ipcRenderer.send('checkUpdate', {name, version});
+        },
         launch: (name) => {
             return launch(name)
         }

@@ -1,3 +1,5 @@
+const { remote } = require('electron')
+
 const child = require('child_process').execFile;
 const path = require('path')
 const store = require('./store.js');
@@ -9,7 +11,7 @@ module.exports = function(name){
         version, 
         name + '.exe'
     )
-    if(process.env.NODE_ENV === 'development') launchPath = path.join(name, version, name + '.exe')
+    if(process.env.NODE_ENV === 'development') launchPath = path.join(remote.app.getAppPath(), name, version, name + '.exe')
     
     console.log("launching", launchPath)
     child(launchPath, function(err, data) {

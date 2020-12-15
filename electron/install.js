@@ -1,32 +1,22 @@
-let games = {
-    witch_craft: {
-        versions: [
-            "0.0.1"
-        ]
-    }
-}
-
-const {google} = require('googleapis');
-const credentials = require('./google.json');
-const store = require('./store.js')
 const Progress = require('progress-stream');
 const fs = require('fs')
 const path = require('path')
 const unzip = require('unzipper');
-const { BrowserWindow } = require("electron");
+const { app, BrowserWindow } = require("electron");
 
-//console.log(credentials)
-const scopes = [
-  'https://www.googleapis.com/auth/drive.readonly'
-];
-const auth = new google.auth.JWT(
-  credentials.client_email, null,
-  credentials.private_key, scopes
-);
+const store = require('./store.js')
+const drive = require('./drive.js')
+const games = require('./versions');
+const { Console } = require('console');
 
-let drive = google.drive({version: 'v3', auth})
+let dev = process.env.NODE_ENV === 'development';
 
-module.exports = function(name){
+let folder = {
+    witch_craft: "128z_F9bIZRl3kJA5BE6VNt1Mx1jo47bG",
+    witch_craft_patches: "14kPGygb0ElZIat3RaL2W4nAXpCaUOSoT"
+}
+
+function installGame(name){
     console.log('installing ' + name)
 
     if(!games[name]) return
@@ -35,7 +25,7 @@ module.exports = function(name){
     let game = games[name]
     let latest = game.versions[game.versions.length - 1]
 
-    mainWindow.webContents.send('fromMain', { event: 'install', step: 'start' })
+    mainWindow.webContents.send('fromMain', { event: 'install', step: 'start', game: name })
     drive.files.list({
         q: `name='${latest}.zip'`,
         pageSize: 2,
@@ -54,7 +44,6 @@ module.exports = function(name){
                 alt: 'media'
             }, { responseType: 'stream' })
             .then( res => {
-                console.log(res)
                 res.data
                   .on("end", () => {
                     installFromTmp(name, file)
@@ -95,7 +84,7 @@ function installFromTmp(game, file){
             }
             store.set(game, data)
 
-            mainWindow.webContents.send('fromMain', { event: 'install', step: 'complete' })
+            mainWindow.webContents.send('fromMain', { event: 'install', step: 'complete', game })
 
             fs.unlinkSync(filepath)
         })
@@ -111,4 +100,104 @@ function createFolderIfNotExists(folder){
     if (!fs.existsSync(folder)){
         fs.mkdirSync(folder);
     }
+}
+
+function getPatchFolder(game, version){
+    return drive.files.list({
+        q: `'${folder[game + '_patches']}' in parents and name='${version}'`,
+        pageSize: 2,
+        fields: 'files(id, name, size)',
+    })
+}
+
+function listFilesInFolder(folderId){
+    return drive.files.list({
+        q: `'${folderId}' in parents`,
+        pageSize: 2,
+        fields: 'files(id, name, size)',
+    })
+}
+function installMissingPatches(game, ids = []){
+
+}
+
+// todo
+function cleanOlderVersions(game){
+    return
+}
+
+function needsUpdate(game, version){
+    let mainWindow = BrowserWindow.getAllWindows()[0]
+    let isLatestVersion = games[game].latest === version
+
+    console.log(isLatestVersion, games[game].latest, version)
+    if(!isLatestVersion){
+        mainWindow.webContents.send('fromMain', { event: 'update', step: 'start', game })
+        installGame(game)
+        cleanOlderVersions(game)
+        return
+    }
+
+    getPatchFolder(game, version)
+        .then(res => {
+            let id =res.data.files[0].id
+            listFilesInFolder(id).then(res =>{
+                let remotePatches = res.data.files
+                let existingPatches = []
+                let patchesToInstall = []
+                let appFolder = path.resolve(process.execPath, '..');
+                let pathToPak = [game, version, game, 'Content', 'Paks']
+                let gameFolder = dev ? path.resolve(app.getAppPath(), ...pathToPak) : path.resolve(appFolder, ...pathToPak)
+                fs.readdir(
+                    gameFolder,
+                    (err, files) => {
+                        if (err) throw err;
+                        
+                        for (let file of files) {
+                            existingPatches.push(file)
+                        }
+                        
+                        for(let patch of remotePatches){
+                            if(!existingPatches.includes(patch.name)) patchesToInstall.push(patch)
+                        }
+
+                        if(!patchesToInstall.length){
+                            return mainWindow.webContents.send('fromMain', { event: 'update', step: 'uptodate', game })
+                        }
+
+                        let downloadPromises = []
+                        let allFileSize = patchesToInstall.reduce((a, b) => a + parseInt(b.size), 0)
+                        let progress = Progress({time:100, length: allFileSize})
+                        let patchesDownloaded = 0
+                        for(let patch of patchesToInstall){
+                            downloadPromises.push(
+                                drive.files.get({ fileId: patch.id, alt: 'media' }, { responseType: 'stream' })
+                                    .then(r => {
+                                        let dest = fs.createWriteStream(path.join(gameFolder, patch.name))
+                                        r.data
+                                            .on('end', () => {
+                                                patchesDownloaded++
+                                                if(patchesDownloaded === patchesToInstall.length){
+                                                    return mainWindow.webContents.send('fromMain', { event: 'update', step: 'complete', game })
+                                                }
+                                            })
+                                            .pipe(progress).pipe(dest)
+                                    })
+                            )
+                        }
+                        
+                        progress.on('progress', function(progress) {
+                            mainWindow.webContents.send('fromMain', { event: 'update', step: 'download', progress: progress.percentage.toFixed(2), game })
+                        });
+
+                        Promise.all(downloadPromises)
+                    }
+                );
+            })
+        })
+}
+
+module.exports = {
+    installGame,
+    needsUpdate
 }

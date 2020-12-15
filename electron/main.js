@@ -1,9 +1,9 @@
 const { app, BrowserWindow, shell, ipcMain, Menu, dialog, autoUpdater  } = require('electron');
 const fs = require('fs')
 const path = require('path')
-const install = require("./install.js")
+const { installGame, needsUpdate } = require("./install.js")
 const dev = process.env.NODE_ENV === 'development';
-
+ 
 // main
 let mainWindow
 let checkUpdateInterval
@@ -20,9 +20,9 @@ if (handleSquirrelEvent()) {
 // if(dev){
 // 	let defaults = JSON.stringify({
 // 		witch_craft:{
-// 			installed:false,
+// 			installed:true,
 // 			path:null,
-// 			patches:[]
+// 			version: "0.0.2"
 // 		}
 // 	})
 // 	fs.writeFileSync(path.join("./config.json"), defaults, () => {})
@@ -125,16 +125,16 @@ if(fs.existsSync(path.resolve(path.dirname(process.execPath), '..', 'update.exe'
 }
 
 autoUpdater.on('update-available', (event) => {
-	if(mainWindow) mainWindow.webContents.send('fromMain', { event: 'update', step: 'not-found' })
+	if(mainWindow) mainWindow.webContents.send('fromMain', { event: 'update-launcher', step: 'not-found' })
 	clearInterval(checkUpdateInterval)
 })
 
 autoUpdater.on('update-not-available', (event) => {
-	if(mainWindow) mainWindow.webContents.send('fromMain', { event: 'update', step: 'found' })
+	if(mainWindow) mainWindow.webContents.send('fromMain', { event: 'update-launcher', step: 'found' })
 })
 
 autoUpdater.on('download-progress', (progressObj) => {
-	if(mainWindow) mainWindow.webContents.send('fromMain', { event: 'update', step: 'download', progress: progressObj.percent })
+	if(mainWindow) mainWindow.webContents.send('fromMain', { event: 'update-launcher', step: 'download', progress: progressObj.percent })
 })
 
 autoUpdater.on('update-downloaded', (event, releaseNotes, releaseName) => {
@@ -145,7 +145,7 @@ autoUpdater.on('update-downloaded', (event, releaseNotes, releaseName) => {
 	  message: process.platform === 'win32' ? releaseNotes : releaseName,
 	  detail: 'A new version has been downloaded. Restart the application to apply the updates.'
 	}
-	if(mainWindow) mainWindow.webContents.send('fromMain', {event: 'update', step: 'complete'})
+	if(mainWindow) mainWindow.webContents.send('fromMain', {event: 'update-launcher', step: 'complete'})
 	
 	dialog.showMessageBox(dialogOpts).then((returnValue) => {
 	  if (returnValue.response === 0) autoUpdater.quitAndInstall()
@@ -218,7 +218,11 @@ createMainWindow = () => {
 
 // IPC MAIN
 ipcMain.on('install', (event, arg) => {
-	install(arg.name)
+	installGame(arg.name)
+})
+
+ipcMain.on('checkUpdate', (event, arg) => {
+	needsUpdate(arg.name, arg.version)
 })
 
 app.on('ready', () => {
