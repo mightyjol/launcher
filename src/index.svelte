@@ -22,6 +22,10 @@
     if(games.witch_craft.installed){
         //window.games.needsUpdate('witch_craft')
     }
+
+    function cancel(){
+        window.games.cancel()
+    }
  
     window.api.receive("fromMain", (data) => {
         if(data.event === 'install'){
@@ -134,7 +138,8 @@
     <p>a launcher update is downloading</p>
 {/if}
 
-<p>witchcraft - 49e essai</p>
+<p>witchcraft - 50e essai</p>
+
 {#if !games['witch_craft'].installed}
     {#if games['witch_craft'].installing}
         {#if games['witch_craft'].progress === 0}

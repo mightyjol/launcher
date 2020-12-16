@@ -5,7 +5,7 @@ import commonjs from 'rollup-plugin-commonjs';
 
 const production = !process.env.ROLLUP_WATCH;
 
-let files = ['index', 'test']
+let files = ['index']
 export default files.map((name, index) => ({
 	input: `src/${name}.js`,
 	output: {

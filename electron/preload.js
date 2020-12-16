@@ -5,6 +5,11 @@ const {
 const launch = require("./launch.js")
 const store = require('./store.js')
 
+window.onbeforeunload = (e) => {
+    return ipcRenderer.send('endAllStreams')
+    e.returnValue = false
+}
+
 // Expose protected methods that allow the renderer process to use
 // the ipcRenderer without exposing the entire object
 contextBridge.exposeInMainWorld(

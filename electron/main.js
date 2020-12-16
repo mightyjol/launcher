@@ -1,7 +1,7 @@
 const { app, BrowserWindow, shell, ipcMain, Menu, dialog, autoUpdater  } = require('electron');
 const fs = require('fs')
 const path = require('path')
-const { installGame, needsUpdate, endAllWriteStreams } = require("./install.js")
+const { installGame, needsUpdate, endAllStreams } = require("./install.js")
 const dev = process.env.NODE_ENV === 'development';
  
 // main
@@ -225,17 +225,14 @@ ipcMain.on('checkUpdate', (event, arg) => {
 	needsUpdate(arg.name, arg.version)
 })
 
+ipcMain.on('endAllStreams', (event, arg) => {
+	endAllStreams()
+	clearInterval(checkUpdateInterval)
+})
+
+
 app.on('ready', () => {
 	createMainWindow();
-});
-
-
-app.on('window-all-closed', app.quit);
-
-app.on('before-quit', () => {
-	endAllWriteStreams()
-    mainWindow.removeAllListeners('close');
-    mainWindow.close();
 });
 
 app.on('activate', () => {

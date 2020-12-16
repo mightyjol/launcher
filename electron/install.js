@@ -7,7 +7,6 @@ const { app, BrowserWindow } = require("electron");
 const store = require('./store.js')
 const drive = require('./drive.js')
 const games = require('./versions');
-const { Console } = require('console');
 
 let dev = process.env.NODE_ENV === 'development';
 
@@ -16,7 +15,7 @@ let folder = {
     witch_craft_patches: "14kPGygb0ElZIat3RaL2W4nAXpCaUOSoT"
 }
 
-let writeStreams = []
+let allStreams = []
 
 function installGame(name){
     console.log('installing ' + name)
@@ -47,7 +46,7 @@ function installGame(name){
             }
 
             let dest = fs.createWriteStream(tmpPath, {flags:'a'});
-            writeStreams.push(dest)
+            allStreams.push(dest)
             let progress = Progress({time:100, length: (file.size - currentFileSize)})
             
             drive.files.get({
@@ -67,7 +66,7 @@ function installGame(name){
             })
             .catch(e => { console.error(e) })
 
-            progress.on('progress', function(progress) {
+            progress.on('progress', function(progress) { 
                 let percentage = (((file.size - progress.remaining) / file.size) *100).toFixed(2)
                 mainWindow.webContents.send('fromMain', { event: 'install', step: 'download', progress: percentage, game: name })
             });
@@ -201,13 +200,12 @@ function needsUpdate(game, version){
                                         }
 
                                         let dest = fs.createWriteStream(tmpPath)
-                                        writeStreams.push(dest)
+                                        allStreams.push(dest)
                                         r.data
                                             .on('end', () => {
                                                 patchesDownloaded++
                                                 if(patchesDownloaded === patchesToInstall.length){
                                                     return installMissingPatches(game, version, patchesToInstall)
-                                                    //return mainWindow.webContents.send('fromMain', { event: 'update', step: 'complete', game })
                                                 }
                                             })
                                             .pipe(progress).pipe(dest)
@@ -243,7 +241,7 @@ function installMissingPatches(game, version, files){
         let filepath = `tmp/patch-${version}-${patch.name}`
         let readable = fs.createReadStream(filepath);
         let writable = fs.createWriteStream(path.join(gameFolder, patch.name));
-        writeStreams.push(writable)
+        allStreams.push(writable)
 
         // use pipe to copy readable to writable
         readable
@@ -260,16 +258,16 @@ function installMissingPatches(game, version, files){
     });
 }
 
-function endAllWriteStreams(){
-    for(let stream of writeStreams){
+function endAllStreams(){
+    for(let stream of allStreams){
         stream.end()
     }
-    writeStreams = []
+    allStreams = []
     return
 }
 
 module.exports = {
     installGame,
     needsUpdate,
-    endAllWriteStreams
+    endAllStreams
 }
