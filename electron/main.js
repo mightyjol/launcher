@@ -1,7 +1,7 @@
 const { app, BrowserWindow, shell, ipcMain, Menu, dialog, autoUpdater  } = require('electron');
 const fs = require('fs')
 const path = require('path')
-const { installGame, needsUpdate } = require("./install.js")
+const { installGame, needsUpdate, endAllWriteStreams } = require("./install.js")
 const dev = process.env.NODE_ENV === 'development';
  
 // main
@@ -233,6 +233,7 @@ app.on('ready', () => {
 app.on('window-all-closed', app.quit);
 
 app.on('before-quit', () => {
+	endAllWriteStreams()
     mainWindow.removeAllListeners('close');
     mainWindow.close();
 });

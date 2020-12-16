@@ -16,6 +16,8 @@ let folder = {
     witch_craft_patches: "14kPGygb0ElZIat3RaL2W4nAXpCaUOSoT"
 }
 
+let writeStreams = []
+
 function installGame(name){
     console.log('installing ' + name)
 
@@ -36,27 +38,38 @@ function installGame(name){
         if (files.length) {
             createFolderIfNotExists('tmp')
             let file = files[0]
-            let dest = fs.createWriteStream(`tmp/${name}-${file.name}`);
-            let progress = Progress({time:100, length: file.size})
+            let tmpPath = `tmp/${name}-${file.name}`
+            let currentFileSize = 0
+            if(fs.existsSync(tmpPath)) currentFileSize = fs.statSync(tmpPath).size
+            
+            if(currentFileSize >= file.size){
+                return installFromTmp(name, file)
+            }
+
+            let dest = fs.createWriteStream(tmpPath, {flags:'a'});
+            writeStreams.push(dest)
+            let progress = Progress({time:100, length: (file.size - currentFileSize)})
             
             drive.files.get({
                 fileId: file.id,
-                alt: 'media'
-            }, { responseType: 'stream' })
+                alt: 'media',
+                
+            }, { responseType: 'stream', headers: { Range: `bytes=${currentFileSize}-` } })
             .then( res => {
                 res.data
-                  .on("end", () => {
-                    installFromTmp(name, file)
-                  })
-                  .on("error", err => {
-                    console.log("Error during download", err);
-                  })
-                  .pipe(progress).pipe(dest);
+                    .on("end", () => {
+                        return installFromTmp(name, file)
+                    })
+                    .on("error", err => {
+                        console.log("Error during download", err);
+                    })
+                    .pipe(progress).pipe(dest);
             })
             .catch(e => { console.error(e) })
 
             progress.on('progress', function(progress) {
-                mainWindow.webContents.send('fromMain', { event: 'install', step: 'download', progress: progress.percentage.toFixed(2), game: name })
+                let percentage = (((file.size - progress.remaining) / file.size) *100).toFixed(2)
+                mainWindow.webContents.send('fromMain', { event: 'install', step: 'download', progress: percentage, game: name })
             });
         } else {
             console.log('No files found.');
@@ -117,9 +130,6 @@ function listFilesInFolder(folderId){
         fields: 'files(id, name, size)',
     })
 }
-function installMissingPatches(game, ids = []){
-
-}
 
 // todo
 function cleanOlderVersions(game){
@@ -143,9 +153,10 @@ function needsUpdate(game, version){
                 let remotePatches = res.data.files
                 let existingPatches = []
                 let patchesToInstall = []
-                let appFolder = path.resolve(process.execPath, '..');
+
                 let pathToPak = [game, version, game, 'Content', 'Paks']
-                let gameFolder = dev ? path.resolve(app.getAppPath(), ...pathToPak) : path.resolve(appFolder, '..', ...pathToPak)
+                let gameFolder = process.env.NODE_ENV === 'development' ? path.resolve(app.getAppPath(), ...pathToPak) : path.resolve(appFolder, '..', ...pathToPak)
+
                 fs.readdir(
                     gameFolder,
                     (err, files) => {
@@ -165,18 +176,38 @@ function needsUpdate(game, version){
 
                         let downloadPromises = []
                         let allFileSize = patchesToInstall.reduce((a, b) => a + parseInt(b.size), 0)
-                        let progress = Progress({time:100, length: allFileSize})
+                        let progress = Progress({time:100})
                         let patchesDownloaded = 0
+                        let totalCurrentFileSize = 0
+
                         for(let patch of patchesToInstall){
+                            let tmpPath = `tmp/patch-${version}-${patch.name}`
+                            let currentFileSize = 0
+                            if(fs.existsSync(tmpPath)){
+                                currentFileSize = fs.statSync(tmpPath).size
+                                totalCurrentFileSize += currentFileSize 
+                            }
+
                             downloadPromises.push(
-                                drive.files.get({ fileId: patch.id, alt: 'media' }, { responseType: 'stream' })
+                                drive.files.get({ fileId: patch.id, alt: 'media' }, { responseType: 'stream', headers: { Range: `bytes=${currentFileSize}-` }})
                                     .then(r => {
-                                        let dest = fs.createWriteStream(path.join(gameFolder, patch.name))
+                                        if(currentFileSize >= patch.size){
+                                            patchesDownloaded++
+                                            if(patchesDownloaded === patchesToInstall.length){
+                                                return installMissingPatches(game, version, patchesToInstall)
+                                                //return mainWindow.webContents.send('fromMain', { event: 'update', step: 'complete', game })
+                                            }
+                                            return
+                                        }
+
+                                        let dest = fs.createWriteStream(tmpPath)
+                                        writeStreams.push(dest)
                                         r.data
                                             .on('end', () => {
                                                 patchesDownloaded++
                                                 if(patchesDownloaded === patchesToInstall.length){
-                                                    return mainWindow.webContents.send('fromMain', { event: 'update', step: 'complete', game })
+                                                    return installMissingPatches(game, version, patchesToInstall)
+                                                    //return mainWindow.webContents.send('fromMain', { event: 'update', step: 'complete', game })
                                                 }
                                             })
                                             .pipe(progress).pipe(dest)
@@ -184,8 +215,10 @@ function needsUpdate(game, version){
                             )
                         }
                         
+                        progress.setLength(allFileSize - totalCurrentFileSize)
                         progress.on('progress', function(progress) {
-                            mainWindow.webContents.send('fromMain', { event: 'update', step: 'download', progress: progress.percentage.toFixed(2), game })
+                            let percentage = (((allFileSize - progress.remaining) / allFileSize) *100).toFixed(2)
+                            mainWindow.webContents.send('fromMain', { event: 'update', step: 'download', progress: percentage, game })
                         });
 
                         Promise.all(downloadPromises)
@@ -195,7 +228,48 @@ function needsUpdate(game, version){
         })
 }
 
+function installMissingPatches(game, version, files){
+    let mainWindow = BrowserWindow.getAllWindows()[0]
+    let appFolder = path.resolve(process.execPath, '..');
+    let pathToPak = [game, version, game, 'Content', 'Paks']
+    let gameFolder = process.env.NODE_ENV === 'development' ? path.resolve(app.getAppPath(), ...pathToPak) : path.resolve(appFolder, '..', ...pathToPak)
+    
+    let progress = Progress({time:100, length: files.reduce((a, b) => a + parseInt(b.size), 0)})
+
+    mainWindow.webContents.send('fromMain', { event: 'update', step: 'installation-start', game })
+
+    let patchesInstalled = 0
+    for(let patch of files){
+        let filepath = `tmp/patch-${version}-${patch.name}`
+        let readable = fs.createReadStream(filepath);
+        let writable = fs.createWriteStream(path.join(gameFolder, patch.name));
+        writeStreams.push(writable)
+
+        // use pipe to copy readable to writable
+        readable
+            .on('end', () => {
+                patchesInstalled++
+                if(patchesInstalled === files.length) mainWindow.webContents.send('fromMain', { event: 'update', step: 'complete', game })
+                fs.unlinkSync(filepath)
+            })
+            .pipe(progress).pipe(writable);
+    }
+
+    progress.on('progress', function(progress) {
+        mainWindow.webContents.send('fromMain', { event: 'update', step: 'installation', progress: progress.percentage.toFixed(2), game })
+    });
+}
+
+function endAllWriteStreams(){
+    for(let stream of writeStreams){
+        stream.end()
+    }
+    writeStreams = []
+    return
+}
+
 module.exports = {
     installGame,
-    needsUpdate
+    needsUpdate,
+    endAllWriteStreams
 }

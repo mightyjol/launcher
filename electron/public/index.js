@@ -330,7 +330,7 @@
     const { console: console_1 } = globals;
     const file = "src\\index.svelte";
 
-    // (129:0) {#if launcher.updateFound}
+    // (133:0) {#if launcher.updateFound}
     function create_if_block_7(ctx) {
     	let p;
 
@@ -338,7 +338,7 @@
     		c: function create() {
     			p = element("p");
     			p.textContent = "a launcher update is downloading";
-    			add_location(p, file, 129, 4, 4830);
+    			add_location(p, file, 133, 4, 4984);
     		},
     		m: function mount(target, anchor) {
     			insert_dev(target, p, anchor);
@@ -352,14 +352,14 @@
     		block,
     		id: create_if_block_7.name,
     		type: "if",
-    		source: "(129:0) {#if launcher.updateFound}",
+    		source: "(133:0) {#if launcher.updateFound}",
     		ctx
     	});
 
     	return block;
     }
 
-    // (157:4) {:else}
+    // (161:4) {:else}
     function create_else_block_3(ctx) {
     	let button;
     	let mounted;
@@ -369,7 +369,7 @@
     		c: function create() {
     			button = element("button");
     			button.textContent = "Lancer THE jeu";
-    			add_location(button, file, 157, 8, 5756);
+    			add_location(button, file, 161, 8, 5910);
     		},
     		m: function mount(target, anchor) {
     			insert_dev(target, button, anchor);
@@ -391,14 +391,14 @@
     		block,
     		id: create_else_block_3.name,
     		type: "else",
-    		source: "(157:4) {:else}",
+    		source: "(161:4) {:else}",
     		ctx
     	});
 
     	return block;
     }
 
-    // (155:43) 
+    // (159:43) 
     function create_if_block_6(ctx) {
     	let p;
 
@@ -406,7 +406,7 @@
     		c: function create() {
     			p = element("p");
     			p.textContent = "cleaning up";
-    			add_location(p, file, 155, 8, 5715);
+    			add_location(p, file, 159, 8, 5869);
     		},
     		m: function mount(target, anchor) {
     			insert_dev(target, p, anchor);
@@ -421,14 +421,14 @@
     		block,
     		id: create_if_block_6.name,
     		type: "if",
-    		source: "(155:43) ",
+    		source: "(159:43) ",
     		ctx
     	});
 
     	return block;
     }
 
-    // (148:4) {#if games['witch_craft'].updating}
+    // (152:4) {#if games['witch_craft'].updating}
     function create_if_block_4(ctx) {
     	let if_block_anchor;
 
@@ -472,14 +472,14 @@
     		block,
     		id: create_if_block_4.name,
     		type: "if",
-    		source: "(148:4) {#if games['witch_craft'].updating}",
+    		source: "(152:4) {#if games['witch_craft'].updating}",
     		ctx
     	});
 
     	return block;
     }
 
-    // (134:0) {#if !games['witch_craft'].installed}
+    // (138:0) {#if !games['witch_craft'].installed}
     function create_if_block(ctx) {
     	let if_block_anchor;
 
@@ -524,14 +524,14 @@
     		block,
     		id: create_if_block.name,
     		type: "if",
-    		source: "(134:0) {#if !games['witch_craft'].installed}",
+    		source: "(138:0) {#if !games['witch_craft'].installed}",
     		ctx
     	});
 
     	return block;
     }
 
-    // (151:8) {:else}
+    // (155:8) {:else}
     function create_else_block_2(ctx) {
     	let p0;
     	let t1;
@@ -548,8 +548,8 @@
     			p1 = element("p");
     			t2 = text(t2_value);
     			t3 = text("%");
-    			add_location(p0, file, 151, 12, 5565);
-    			add_location(p1, file, 152, 12, 5606);
+    			add_location(p0, file, 155, 12, 5719);
+    			add_location(p1, file, 156, 12, 5760);
     		},
     		m: function mount(target, anchor) {
     			insert_dev(target, p0, anchor);
@@ -572,14 +572,14 @@
     		block,
     		id: create_else_block_2.name,
     		type: "else",
-    		source: "(151:8) {:else}",
+    		source: "(155:8) {:else}",
     		ctx
     	});
 
     	return block;
     }
 
-    // (149:8) {#if games['witch_craft'].progress === 0}
+    // (153:8) {#if games['witch_craft'].progress === 0}
     function create_if_block_5(ctx) {
     	let p;
 
@@ -587,7 +587,7 @@
     		c: function create() {
     			p = element("p");
     			p.textContent = "checking for update";
-    			add_location(p, file, 149, 12, 5508);
+    			add_location(p, file, 153, 12, 5662);
     		},
     		m: function mount(target, anchor) {
     			insert_dev(target, p, anchor);
@@ -602,14 +602,14 @@
     		block,
     		id: create_if_block_5.name,
     		type: "if",
-    		source: "(149:8) {#if games['witch_craft'].progress === 0}",
+    		source: "(153:8) {#if games['witch_craft'].progress === 0}",
     		ctx
     	});
 
     	return block;
     }
 
-    // (144:4) {:else}
+    // (148:4) {:else}
     function create_else_block_1(ctx) {
     	let button;
     	let mounted;
@@ -619,7 +619,7 @@
     		c: function create() {
     			button = element("button");
     			button.textContent = "installer le jeu";
-    			add_location(button, file, 144, 8, 5308);
+    			add_location(button, file, 148, 8, 5462);
     		},
     		m: function mount(target, anchor) {
     			insert_dev(target, button, anchor);
@@ -641,14 +641,14 @@
     		block,
     		id: create_else_block_1.name,
     		type: "else",
-    		source: "(144:4) {:else}",
+    		source: "(148:4) {:else}",
     		ctx
     	});
 
     	return block;
     }
 
-    // (142:43) 
+    // (146:43) 
     function create_if_block_3(ctx) {
     	let p;
 
@@ -656,7 +656,7 @@
     		c: function create() {
     			p = element("p");
     			p.textContent = "cleaning up";
-    			add_location(p, file, 142, 8, 5267);
+    			add_location(p, file, 146, 8, 5421);
     		},
     		m: function mount(target, anchor) {
     			insert_dev(target, p, anchor);
@@ -671,14 +671,14 @@
     		block,
     		id: create_if_block_3.name,
     		type: "if",
-    		source: "(142:43) ",
+    		source: "(146:43) ",
     		ctx
     	});
 
     	return block;
     }
 
-    // (135:4) {#if games['witch_craft'].installing}
+    // (139:4) {#if games['witch_craft'].installing}
     function create_if_block_1(ctx) {
     	let if_block_anchor;
 
@@ -722,14 +722,14 @@
     		block,
     		id: create_if_block_1.name,
     		type: "if",
-    		source: "(135:4) {#if games['witch_craft'].installing}",
+    		source: "(139:4) {#if games['witch_craft'].installing}",
     		ctx
     	});
 
     	return block;
     }
 
-    // (138:8) {:else}
+    // (142:8) {:else}
     function create_else_block(ctx) {
     	let p0;
     	let t1;
@@ -746,8 +746,8 @@
     			p1 = element("p");
     			t2 = text(t2_value);
     			t3 = text("%");
-    			add_location(p0, file, 138, 12, 5116);
-    			add_location(p1, file, 139, 12, 5158);
+    			add_location(p0, file, 142, 12, 5270);
+    			add_location(p1, file, 143, 12, 5312);
     		},
     		m: function mount(target, anchor) {
     			insert_dev(target, p0, anchor);
@@ -770,14 +770,14 @@
     		block,
     		id: create_else_block.name,
     		type: "else",
-    		source: "(138:8) {:else}",
+    		source: "(142:8) {:else}",
     		ctx
     	});
 
     	return block;
     }
 
-    // (136:8) {#if games['witch_craft'].progress === 0}
+    // (140:8) {#if games['witch_craft'].progress === 0}
     function create_if_block_2(ctx) {
     	let p;
 
@@ -785,7 +785,7 @@
     		c: function create() {
     			p = element("p");
     			p.textContent = "preparing installation";
-    			add_location(p, file, 136, 12, 5056);
+    			add_location(p, file, 140, 12, 5210);
     		},
     		m: function mount(target, anchor) {
     			insert_dev(target, p, anchor);
@@ -800,7 +800,7 @@
     		block,
     		id: create_if_block_2.name,
     		type: "if",
-    		source: "(136:8) {#if games['witch_craft'].progress === 0}",
+    		source: "(140:8) {#if games['witch_craft'].progress === 0}",
     		ctx
     	});
 
@@ -829,11 +829,11 @@
     			if (if_block0) if_block0.c();
     			t0 = space();
     			p = element("p");
-    			p.textContent = "witchcraft - 46e essai";
+    			p.textContent = "witchcraft - 49e essai";
     			t2 = space();
     			if_block1.c();
     			if_block1_anchor = empty();
-    			add_location(p, file, 132, 0, 4880);
+    			add_location(p, file, 136, 0, 5034);
     		},
     		l: function claim(nodes) {
     			throw new Error("options.hydrate only works if the component was compiled with the `hydratable: true` option");
@@ -997,6 +997,10 @@
     				$$invalidate(1, games[data.game].progress = data.progress, games);
     			}
 
+    			if (data.step === "installation-start") {
+    				$$invalidate(1, games[data.game].cleanup = true, games);
+    			}
+
     			if (data.step === "complete") {
     				console.log("update complete for: " + data.game);
     				$$invalidate(1, games[data.game].updating = false, games);
@@ -1017,11 +1021,12 @@
 
     	function launch(game) {
     		$$invalidate(1, games[game].wantsToLaunch = true, games);
-    		$$invalidate(1, games[game].updating = true, games);
     		$$invalidate(1, games = { ...games });
 
     		if (games[game].needsUpdate === undefined) {
     			console.log("checking for update");
+    			$$invalidate(1, games[game].updating = true, games);
+    			$$invalidate(1, games = { ...games });
     			return window.games.needsUpdate(game, games[game].version);
     		} else {
     			window.games.launch("witch_craft");

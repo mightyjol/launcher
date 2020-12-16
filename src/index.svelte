@@ -93,6 +93,9 @@
                 console.log('downloading update ' + data.progress + '% for: ' + data.game)
                 games[data.game].progress = data.progress
             }
+            if(data.step === 'installation-start') {
+                games[data.game].cleanup = true
+            }
             if(data.step === 'complete') { 
                 console.log('update complete for: ' + data.game) 
                 games[data.game].updating = false
@@ -113,10 +116,11 @@
 
     function launch(game){
         games[game].wantsToLaunch = true
-        games[game].updating = true 
         games = {...games}
         if(games[game].needsUpdate === undefined){
             console.log('checking for update')
+            games[game].updating = true 
+            games = {...games}
             return window.games.needsUpdate(game, games[game].version)
         }
         else {
@@ -130,7 +134,7 @@
     <p>a launcher update is downloading</p>
 {/if}
 
-<p>witchcraft - 46e essai</p>
+<p>witchcraft - 49e essai</p>
 {#if !games['witch_craft'].installed}
     {#if games['witch_craft'].installing}
         {#if games['witch_craft'].progress === 0}
