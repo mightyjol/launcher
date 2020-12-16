@@ -18,6 +18,7 @@
         }
     }
 
+    console.log(window.games.getDataForGame('witch_craft'))
     if(games.witch_craft.installed){
         //window.games.needsUpdate('witch_craft')
     }
@@ -27,9 +28,15 @@
             if(data.step === 'start') {
                 console.log('preparing installation')
 
-                console.log(data)
-                if(games[data.game].installed) games[data.game].updating = true
-                else games[data.game].installing = true
+                console.log(games[data.game])
+                if(games[data.game].installed) {
+                    games[data.game].updating = true
+                    console.log('game installed')
+                }
+                else {
+                    games[data.game].installing = true
+                    console.log('game not installed')
+                }
                 games[data.game].progress = 0
             }
             if(data.step === 'download') {
@@ -100,17 +107,16 @@
 
     function install(game){
         window.games.install(game)
-        games[game].installed = true
+        games[game].installing = true
         games = {...games}
     }
 
     function launch(game){
         games[game].wantsToLaunch = true
+        games[game].updating = true 
         games = {...games}
         if(games[game].needsUpdate === undefined){
             console.log('checking for update')
-            games[game].updating = true
-            games = {...games}
             return window.games.needsUpdate(game, games[game].version)
         }
         else {
@@ -126,10 +132,17 @@
 
 <p>witchcraft - 46e essai</p>
 {#if !games['witch_craft'].installed}
-    <button on:click={() => install('witch_craft')} >installer le jeu</button>
-    {#if games['witch_craft'].downloading}
-        installation en cours
-        <p>{games['witch_craft'].progress}%</p>
+    {#if games['witch_craft'].installing}
+        {#if games['witch_craft'].progress === 0}
+            <p>preparing installation</p>
+        {:else}
+            <p>installation en cours</p>
+            <p>{games['witch_craft'].progress}%</p>
+        {/if}
+    {:else if games['witch_craft'].cleanup}
+        <p>cleaning up</p>
+    {:else}
+        <button on:click={() => install('witch_craft')} >installer le jeu</button>
     {/if}
 {:else}
     {#if games['witch_craft'].updating}

@@ -4,7 +4,6 @@ const remote = require("electron").remote;
 
 let configPath = path.join(path.dirname(process.execPath), '..', "config.json")
 if(process.env.NODE_ENV === 'development') configPath = './config.json'
-console.log(configPath)
 
 module.exports = {
     set: function(key, object){

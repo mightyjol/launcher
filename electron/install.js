@@ -130,9 +130,7 @@ function needsUpdate(game, version){
     let mainWindow = BrowserWindow.getAllWindows()[0]
     let isLatestVersion = games[game].latest === version
 
-    console.log(isLatestVersion, games[game].latest, version)
     if(!isLatestVersion){
-        mainWindow.webContents.send('fromMain', { event: 'update', step: 'start', game })
         installGame(game)
         cleanOlderVersions(game)
         return
