@@ -116,12 +116,8 @@ const feed = `${server}/update/${process.platform}/${app.getVersion()}`
 autoUpdater.setFeedURL(feed)
 
 if(fs.existsSync(path.resolve(path.dirname(process.execPath), '..', 'update.exe'))){
-	console.log('checking update')
-	if(mainWindow) mainWindow.webContents.send('fromMain', 'check updates')
-
-	checkUpdateInterval = setInterval(() => {
-		autoUpdater.checkForUpdates()
-	}, 5000)
+	if(mainWindow) mainWindow.webContents.send('fromMain', {event: 'log', message:'checking launcher update'})
+	autoUpdater.checkForUpdates()
 }
 
 autoUpdater.on('update-available', (event) => {
@@ -191,7 +187,12 @@ createMainWindow = () => {
 		slashes: true
 	}))
 	
-
+	mainWindow.on('focus', e => {
+		if(fs.existsSync(path.resolve(path.dirname(process.execPath), '..', 'update.exe'))){
+			mainWindow.webContents.send('fromMain', {event: 'log', message:'checking launcher update'})
+			autoUpdater.checkForUpdates()
+		}
+	})
 	/*if(dev)*/ mainWindow.webContents.openDevTools();
 	
 	mainWindow.once('ready-to-show', () => {
