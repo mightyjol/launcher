@@ -109,6 +109,7 @@
             }
         }
 
+        if(data.event === 'log') console.log(data.message)
         games = {...games}
     });
 
@@ -138,7 +139,7 @@
     <p>a launcher update is downloading</p>
 {/if}
 
-<p>witchcraft - 50e essai</p>
+<p>witchcraft - 51e essai</p>
 
 {#if !games['witch_craft'].installed}
     {#if games['witch_craft'].installing}

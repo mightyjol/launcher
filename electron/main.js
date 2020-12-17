@@ -153,18 +153,7 @@ autoUpdater.on('update-downloaded', (event, releaseNotes, releaseName) => {
 })
 
 autoUpdater.on('error', message => {
-	const dialogOpts = {
-		type: 'error',
-		buttons: ['ok'],
-		title: 'Application Update Error',
-		message: "error",
-		detail: message
-	}
-	
-	dialog.showMessageBox(dialogOpts).then((returnValue) => {
-	})
-
-	if(mainWindow) mainWindow.webContents.send('fromMain', message)
+	if(mainWindow) mainWindow.webContents.send('fromMain', { event: 'error', message})
 })
 
 createWindow = (preload = true) => {

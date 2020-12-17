@@ -140,26 +140,37 @@ function needsUpdate(game, version){
     let isLatestVersion = games[game].latest === version
 
     if(!isLatestVersion){
+        mainWindow.webContents.send('fromMain', { event: 'log', message: 'game is not up to date with latest version', game })
         installGame(game)
         cleanOlderVersions(game)
         return
     }
 
+    mainWindow.webContents.send('fromMain', { event: 'log', message: 'about to check remote patch folder', game })
+
     getPatchFolder(game, version)
         .then(res => {
             let id =res.data.files[0].id
-            listFilesInFolder(id).then(res =>{
+            mainWindow.webContents.send('fromMain', { event: 'log', message: 'patch file id' + id})
+       
+        listFilesInFolder(id)
+            .then(res =>{
+                mainWindow.webContents.send('fromMain', { event: 'log', message: 'res.data.files' })
+                
                 let remotePatches = res.data.files
                 let existingPatches = []
                 let patchesToInstall = []
 
+                let appFolder = path.resolve(process.execPath, '..');
                 let pathToPak = [game, version, game, 'Content', 'Paks']
+                
                 let gameFolder = process.env.NODE_ENV === 'development' ? path.resolve(app.getAppPath(), ...pathToPak) : path.resolve(appFolder, '..', ...pathToPak)
+                mainWindow.webContents.send('fromMain', { event: 'log', message: gameFolder })
 
                 fs.readdir(
                     gameFolder,
                     (err, files) => {
-                        if (err) throw err;
+                        if (err) return mainWindow.webContents.send('fromMain', { event: 'log', message: err, game })
                         
                         for (let file of files) {
                             existingPatches.push(file)
@@ -223,7 +234,9 @@ function needsUpdate(game, version){
                     }
                 );
             })
+            .catch(e => {  mainWindow.webContents.send('fromMain', { event: 'log', message: e, game }) })
         })
+        
 }
 
 function installMissingPatches(game, version, files){
