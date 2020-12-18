@@ -91,7 +91,7 @@
           "name": "@electron-forge/maker-squirrel",
           "config": {
             "name": "launcher",
-            "certificateFile": "./csc.pfx",
+            "certificateFile": "./csc.pfx"
           }
         },
         {
