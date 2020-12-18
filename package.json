@@ -1,7 +1,7 @@
 {
   "name": "launcher",
   "description": "cool launcher",
-  "version": "0.1.0",
+  "version": "0.1.1",
   "license": "MIT",
   "author": "mighty",
   "main": "electron/main.js",
@@ -90,7 +90,8 @@
         {
           "name": "@electron-forge/maker-squirrel",
           "config": {
-            "name": "launcher"
+            "name": "launcher",
+            "certificateFile": "./csc.pfx",
           }
         },
         {
