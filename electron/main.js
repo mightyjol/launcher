@@ -154,10 +154,10 @@ autoUpdater.on('error', message => {
 
 createWindow = (preload = true) => {
 	let newWindow = new BrowserWindow({
-		backgroundColor: '#FFFFFF',
+		backgroundColor: '#FFF',
 		minWidth: 375,
 		show: false,
-		frame: true,
+		frame: false,
 		width: 1280,
 		height: 860,
 		webPreferences: {
@@ -193,7 +193,7 @@ createMainWindow = () => {
 			autoUpdater.checkForUpdates()
 		}
 	})
-	/*if(dev)*/ mainWindow.webContents.openDevTools();
+	// /*if(dev)*/ mainWindow.webContents.openDevTools();
 	
 	mainWindow.once('ready-to-show', () => {
 		//console.error('test')
@@ -215,9 +215,19 @@ ipcMain.on('checkUpdate', (event, arg) => {
 	needsUpdate(arg.name, arg.version)
 })
 
-ipcMain.on('endAllStreams', (event, arg) => {
+ipcMain.on('endAllStreams', () => {
 	endAllStreams()
 	clearInterval(checkUpdateInterval)
+})
+
+ipcMain.on('closeWindow', () => {
+	mainWindow.close()
+})
+ipcMain.on('maximizeWindow', () => {
+	mainWindow.isMaximized() ? mainWindow.unmaximize() : mainWindow.maximize()
+})
+ipcMain.on('minimizeWindow', () => {
+	mainWindow.minimize()
 })
 
 

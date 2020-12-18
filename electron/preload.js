@@ -49,3 +49,20 @@ contextBridge.exposeInMainWorld(
         }
     }
 )
+
+contextBridge.exposeInMainWorld(
+    "frame", {
+        minimize: () => {
+            return ipcRenderer.send('minimizeWindow', {name});
+        },
+        maximize: () => {
+            return ipcRenderer.send('maximizeWindow', {name});
+        },
+        unmaximize: () => {
+            return ipcRenderer.send('unmaximizeWindow', {name});
+        },
+        close: () => {
+            return ipcRenderer.send('closeWindow', {name});
+        }
+    }
+)

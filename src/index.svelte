@@ -1,4 +1,5 @@
 <script>
+    import Title from "./components/Title.svelte"
     let launcher = {
         updateFound: false,
         downloading: false
@@ -134,13 +135,7 @@
         
     }
 </script>
-
-{#if launcher.updateFound}
-    <p>a launcher update is downloading</p>
-{/if}
-
-<p>witchcraft - 51e essai</p>
-
+<!-- 
 {#if !games['witch_craft'].installed}
     {#if games['witch_craft'].installing}
         {#if games['witch_craft'].progress === 0}
@@ -168,3 +163,16 @@
         <button on:click={() => launch('witch_craft')}>Lancer THE jeu</button>   
     {/if}
 {/if}
+ -->
+
+<Title />
+<main class="container w-screen flex justify-center items-center text-gray-300 bg-nero-600">
+    <h1 class="text-center font-bold text-2xl uppercase">MAJ graphique</h1>
+</main>
+
+<style>
+    main{
+        margin-top: 32px;
+        height: calc(100vh - 32px);
+    }
+</style>
