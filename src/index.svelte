@@ -135,39 +135,36 @@
         
     }
 </script>
-<!-- 
-{#if !games['witch_craft'].installed}
-    {#if games['witch_craft'].installing}
-        {#if games['witch_craft'].progress === 0}
-            <p>preparing installation</p>
-        {:else}
-            <p>installation en cours</p>
-            <p>{games['witch_craft'].progress}%</p>
-        {/if}
-    {:else if games['witch_craft'].cleanup}
-        <p>cleaning up</p>
-    {:else}
-        <button on:click={() => install('witch_craft')} >installer le jeu</button>
-    {/if}
-{:else}
-    {#if games['witch_craft'].updating}
-        {#if games['witch_craft'].progress === 0}
-            <p>checking for update</p>
-        {:else}
-            <p>mise à jour en cours</p>
-            <p>{games['witch_craft'].progress}%</p>
-        {/if}
-    {:else if games['witch_craft'].cleanup}
-        <p>cleaning up</p>
-    {:else}
-        <button on:click={() => launch('witch_craft')}>Lancer THE jeu</button>   
-    {/if}
-{/if}
- -->
 
 <Title />
 <main class="container w-screen flex justify-center items-center text-gray-300 bg-nero-600">
-    <h1 class="text-center font-bold text-2xl uppercase">MAJ graphique</h1>
+    {#if !games['witch_craft'].installed}
+        {#if games['witch_craft'].installing}
+            {#if games['witch_craft'].progress === 0}
+                <p>preparing installation</p>
+            {:else}
+                <p>installation en cours</p>
+                <p>{games['witch_craft'].progress}%</p>
+            {/if}
+        {:else if games['witch_craft'].cleanup}
+            <p>cleaning up</p>
+        {:else}
+            <button on:click={() => install('witch_craft')} >installer le jeu</button>
+        {/if}
+    {:else}
+        {#if games['witch_craft'].updating}
+            {#if games['witch_craft'].progress === 0}
+                <p>checking for update</p>
+            {:else}
+                <p>mise à jour en cours</p>
+                <p>{games['witch_craft'].progress}%</p>
+            {/if}
+        {:else if games['witch_craft'].cleanup}
+            <p>cleaning up</p>
+        {:else}
+            <button on:click={() => launch('witch_craft')}>Lancer THE jeu</button>   
+        {/if}
+    {/if}
 </main>
 
 <style>

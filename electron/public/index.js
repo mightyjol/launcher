@@ -44,6 +44,9 @@
     function space() {
         return text(' ');
     }
+    function empty() {
+        return text('');
+    }
     function listen(node, event, handler, options) {
         node.addEventListener(event, handler, options);
         return () => node.removeEventListener(event, handler, options);
@@ -321,6 +324,13 @@
         else
             dispatch_dev('SvelteDOMSetAttribute', { node, attribute, value });
     }
+    function set_data_dev(text, data) {
+        data = '' + data;
+        if (text.wholeText === data)
+            return;
+        dispatch_dev('SvelteDOMSetData', { node: text, data });
+        text.data = data;
+    }
     function validate_slots(name, slot, keys) {
         for (const slot_key of Object.keys(slot)) {
             if (!~keys.indexOf(slot_key)) {
@@ -509,37 +519,503 @@
     const { console: console_1 } = globals;
     const file$1 = "src\\index.svelte";
 
+    // (164:8) {:else}
+    function create_else_block_3(ctx) {
+    	let button;
+    	let mounted;
+    	let dispose;
+
+    	const block = {
+    		c: function create() {
+    			button = element("button");
+    			button.textContent = "Lancer THE jeu";
+    			add_location(button, file$1, 164, 12, 6177);
+    		},
+    		m: function mount(target, anchor) {
+    			insert_dev(target, button, anchor);
+
+    			if (!mounted) {
+    				dispose = listen_dev(button, "click", /*click_handler_1*/ ctx[4], false, false, false);
+    				mounted = true;
+    			}
+    		},
+    		p: noop,
+    		d: function destroy(detaching) {
+    			if (detaching) detach_dev(button);
+    			mounted = false;
+    			dispose();
+    		}
+    	};
+
+    	dispatch_dev("SvelteRegisterBlock", {
+    		block,
+    		id: create_else_block_3.name,
+    		type: "else",
+    		source: "(164:8) {:else}",
+    		ctx
+    	});
+
+    	return block;
+    }
+
+    // (162:47) 
+    function create_if_block_6(ctx) {
+    	let p;
+
+    	const block = {
+    		c: function create() {
+    			p = element("p");
+    			p.textContent = "cleaning up";
+    			add_location(p, file$1, 162, 12, 6128);
+    		},
+    		m: function mount(target, anchor) {
+    			insert_dev(target, p, anchor);
+    		},
+    		p: noop,
+    		d: function destroy(detaching) {
+    			if (detaching) detach_dev(p);
+    		}
+    	};
+
+    	dispatch_dev("SvelteRegisterBlock", {
+    		block,
+    		id: create_if_block_6.name,
+    		type: "if",
+    		source: "(162:47) ",
+    		ctx
+    	});
+
+    	return block;
+    }
+
+    // (155:8) {#if games['witch_craft'].updating}
+    function create_if_block_4(ctx) {
+    	let if_block_anchor;
+
+    	function select_block_type_3(ctx, dirty) {
+    		if (/*games*/ ctx[0]["witch_craft"].progress === 0) return create_if_block_5;
+    		return create_else_block_2;
+    	}
+
+    	let current_block_type = select_block_type_3(ctx);
+    	let if_block = current_block_type(ctx);
+
+    	const block = {
+    		c: function create() {
+    			if_block.c();
+    			if_block_anchor = empty();
+    		},
+    		m: function mount(target, anchor) {
+    			if_block.m(target, anchor);
+    			insert_dev(target, if_block_anchor, anchor);
+    		},
+    		p: function update(ctx, dirty) {
+    			if (current_block_type === (current_block_type = select_block_type_3(ctx)) && if_block) {
+    				if_block.p(ctx, dirty);
+    			} else {
+    				if_block.d(1);
+    				if_block = current_block_type(ctx);
+
+    				if (if_block) {
+    					if_block.c();
+    					if_block.m(if_block_anchor.parentNode, if_block_anchor);
+    				}
+    			}
+    		},
+    		d: function destroy(detaching) {
+    			if_block.d(detaching);
+    			if (detaching) detach_dev(if_block_anchor);
+    		}
+    	};
+
+    	dispatch_dev("SvelteRegisterBlock", {
+    		block,
+    		id: create_if_block_4.name,
+    		type: "if",
+    		source: "(155:8) {#if games['witch_craft'].updating}",
+    		ctx
+    	});
+
+    	return block;
+    }
+
+    // (141:4) {#if !games['witch_craft'].installed}
+    function create_if_block(ctx) {
+    	let if_block_anchor;
+
+    	function select_block_type_1(ctx, dirty) {
+    		if (/*games*/ ctx[0]["witch_craft"].installing) return create_if_block_1;
+    		if (/*games*/ ctx[0]["witch_craft"].cleanup) return create_if_block_3;
+    		return create_else_block_1;
+    	}
+
+    	let current_block_type = select_block_type_1(ctx);
+    	let if_block = current_block_type(ctx);
+
+    	const block = {
+    		c: function create() {
+    			if_block.c();
+    			if_block_anchor = empty();
+    		},
+    		m: function mount(target, anchor) {
+    			if_block.m(target, anchor);
+    			insert_dev(target, if_block_anchor, anchor);
+    		},
+    		p: function update(ctx, dirty) {
+    			if (current_block_type === (current_block_type = select_block_type_1(ctx)) && if_block) {
+    				if_block.p(ctx, dirty);
+    			} else {
+    				if_block.d(1);
+    				if_block = current_block_type(ctx);
+
+    				if (if_block) {
+    					if_block.c();
+    					if_block.m(if_block_anchor.parentNode, if_block_anchor);
+    				}
+    			}
+    		},
+    		d: function destroy(detaching) {
+    			if_block.d(detaching);
+    			if (detaching) detach_dev(if_block_anchor);
+    		}
+    	};
+
+    	dispatch_dev("SvelteRegisterBlock", {
+    		block,
+    		id: create_if_block.name,
+    		type: "if",
+    		source: "(141:4) {#if !games['witch_craft'].installed}",
+    		ctx
+    	});
+
+    	return block;
+    }
+
+    // (158:12) {:else}
+    function create_else_block_2(ctx) {
+    	let p0;
+    	let t1;
+    	let p1;
+    	let t2_value = /*games*/ ctx[0]["witch_craft"].progress + "";
+    	let t2;
+    	let t3;
+
+    	const block = {
+    		c: function create() {
+    			p0 = element("p");
+    			p0.textContent = "mise à jour en cours";
+    			t1 = space();
+    			p1 = element("p");
+    			t2 = text(t2_value);
+    			t3 = text("%");
+    			add_location(p0, file$1, 158, 16, 5962);
+    			add_location(p1, file$1, 159, 16, 6007);
+    		},
+    		m: function mount(target, anchor) {
+    			insert_dev(target, p0, anchor);
+    			insert_dev(target, t1, anchor);
+    			insert_dev(target, p1, anchor);
+    			append_dev(p1, t2);
+    			append_dev(p1, t3);
+    		},
+    		p: function update(ctx, dirty) {
+    			if (dirty & /*games*/ 1 && t2_value !== (t2_value = /*games*/ ctx[0]["witch_craft"].progress + "")) set_data_dev(t2, t2_value);
+    		},
+    		d: function destroy(detaching) {
+    			if (detaching) detach_dev(p0);
+    			if (detaching) detach_dev(t1);
+    			if (detaching) detach_dev(p1);
+    		}
+    	};
+
+    	dispatch_dev("SvelteRegisterBlock", {
+    		block,
+    		id: create_else_block_2.name,
+    		type: "else",
+    		source: "(158:12) {:else}",
+    		ctx
+    	});
+
+    	return block;
+    }
+
+    // (156:12) {#if games['witch_craft'].progress === 0}
+    function create_if_block_5(ctx) {
+    	let p;
+
+    	const block = {
+    		c: function create() {
+    			p = element("p");
+    			p.textContent = "checking for update";
+    			add_location(p, file$1, 156, 16, 5897);
+    		},
+    		m: function mount(target, anchor) {
+    			insert_dev(target, p, anchor);
+    		},
+    		p: noop,
+    		d: function destroy(detaching) {
+    			if (detaching) detach_dev(p);
+    		}
+    	};
+
+    	dispatch_dev("SvelteRegisterBlock", {
+    		block,
+    		id: create_if_block_5.name,
+    		type: "if",
+    		source: "(156:12) {#if games['witch_craft'].progress === 0}",
+    		ctx
+    	});
+
+    	return block;
+    }
+
+    // (151:8) {:else}
+    function create_else_block_1(ctx) {
+    	let button;
+    	let mounted;
+    	let dispose;
+
+    	const block = {
+    		c: function create() {
+    			button = element("button");
+    			button.textContent = "installer le jeu";
+    			add_location(button, file$1, 151, 12, 5677);
+    		},
+    		m: function mount(target, anchor) {
+    			insert_dev(target, button, anchor);
+
+    			if (!mounted) {
+    				dispose = listen_dev(button, "click", /*click_handler*/ ctx[3], false, false, false);
+    				mounted = true;
+    			}
+    		},
+    		p: noop,
+    		d: function destroy(detaching) {
+    			if (detaching) detach_dev(button);
+    			mounted = false;
+    			dispose();
+    		}
+    	};
+
+    	dispatch_dev("SvelteRegisterBlock", {
+    		block,
+    		id: create_else_block_1.name,
+    		type: "else",
+    		source: "(151:8) {:else}",
+    		ctx
+    	});
+
+    	return block;
+    }
+
+    // (149:47) 
+    function create_if_block_3(ctx) {
+    	let p;
+
+    	const block = {
+    		c: function create() {
+    			p = element("p");
+    			p.textContent = "cleaning up";
+    			add_location(p, file$1, 149, 12, 5628);
+    		},
+    		m: function mount(target, anchor) {
+    			insert_dev(target, p, anchor);
+    		},
+    		p: noop,
+    		d: function destroy(detaching) {
+    			if (detaching) detach_dev(p);
+    		}
+    	};
+
+    	dispatch_dev("SvelteRegisterBlock", {
+    		block,
+    		id: create_if_block_3.name,
+    		type: "if",
+    		source: "(149:47) ",
+    		ctx
+    	});
+
+    	return block;
+    }
+
+    // (142:8) {#if games['witch_craft'].installing}
+    function create_if_block_1(ctx) {
+    	let if_block_anchor;
+
+    	function select_block_type_2(ctx, dirty) {
+    		if (/*games*/ ctx[0]["witch_craft"].progress === 0) return create_if_block_2;
+    		return create_else_block;
+    	}
+
+    	let current_block_type = select_block_type_2(ctx);
+    	let if_block = current_block_type(ctx);
+
+    	const block = {
+    		c: function create() {
+    			if_block.c();
+    			if_block_anchor = empty();
+    		},
+    		m: function mount(target, anchor) {
+    			if_block.m(target, anchor);
+    			insert_dev(target, if_block_anchor, anchor);
+    		},
+    		p: function update(ctx, dirty) {
+    			if (current_block_type === (current_block_type = select_block_type_2(ctx)) && if_block) {
+    				if_block.p(ctx, dirty);
+    			} else {
+    				if_block.d(1);
+    				if_block = current_block_type(ctx);
+
+    				if (if_block) {
+    					if_block.c();
+    					if_block.m(if_block_anchor.parentNode, if_block_anchor);
+    				}
+    			}
+    		},
+    		d: function destroy(detaching) {
+    			if_block.d(detaching);
+    			if (detaching) detach_dev(if_block_anchor);
+    		}
+    	};
+
+    	dispatch_dev("SvelteRegisterBlock", {
+    		block,
+    		id: create_if_block_1.name,
+    		type: "if",
+    		source: "(142:8) {#if games['witch_craft'].installing}",
+    		ctx
+    	});
+
+    	return block;
+    }
+
+    // (145:12) {:else}
+    function create_else_block(ctx) {
+    	let p0;
+    	let t1;
+    	let p1;
+    	let t2_value = /*games*/ ctx[0]["witch_craft"].progress + "";
+    	let t2;
+    	let t3;
+
+    	const block = {
+    		c: function create() {
+    			p0 = element("p");
+    			p0.textContent = "installation en cours";
+    			t1 = space();
+    			p1 = element("p");
+    			t2 = text(t2_value);
+    			t3 = text("%");
+    			add_location(p0, file$1, 145, 16, 5461);
+    			add_location(p1, file$1, 146, 16, 5507);
+    		},
+    		m: function mount(target, anchor) {
+    			insert_dev(target, p0, anchor);
+    			insert_dev(target, t1, anchor);
+    			insert_dev(target, p1, anchor);
+    			append_dev(p1, t2);
+    			append_dev(p1, t3);
+    		},
+    		p: function update(ctx, dirty) {
+    			if (dirty & /*games*/ 1 && t2_value !== (t2_value = /*games*/ ctx[0]["witch_craft"].progress + "")) set_data_dev(t2, t2_value);
+    		},
+    		d: function destroy(detaching) {
+    			if (detaching) detach_dev(p0);
+    			if (detaching) detach_dev(t1);
+    			if (detaching) detach_dev(p1);
+    		}
+    	};
+
+    	dispatch_dev("SvelteRegisterBlock", {
+    		block,
+    		id: create_else_block.name,
+    		type: "else",
+    		source: "(145:12) {:else}",
+    		ctx
+    	});
+
+    	return block;
+    }
+
+    // (143:12) {#if games['witch_craft'].progress === 0}
+    function create_if_block_2(ctx) {
+    	let p;
+
+    	const block = {
+    		c: function create() {
+    			p = element("p");
+    			p.textContent = "preparing installation";
+    			add_location(p, file$1, 143, 16, 5393);
+    		},
+    		m: function mount(target, anchor) {
+    			insert_dev(target, p, anchor);
+    		},
+    		p: noop,
+    		d: function destroy(detaching) {
+    			if (detaching) detach_dev(p);
+    		}
+    	};
+
+    	dispatch_dev("SvelteRegisterBlock", {
+    		block,
+    		id: create_if_block_2.name,
+    		type: "if",
+    		source: "(143:12) {#if games['witch_craft'].progress === 0}",
+    		ctx
+    	});
+
+    	return block;
+    }
+
     function create_fragment$1(ctx) {
     	let title;
-    	let t0;
+    	let t;
     	let main;
-    	let h1;
     	let current;
     	title = new Title({ $$inline: true });
+
+    	function select_block_type(ctx, dirty) {
+    		if (!/*games*/ ctx[0]["witch_craft"].installed) return create_if_block;
+    		if (/*games*/ ctx[0]["witch_craft"].updating) return create_if_block_4;
+    		if (/*games*/ ctx[0]["witch_craft"].cleanup) return create_if_block_6;
+    		return create_else_block_3;
+    	}
+
+    	let current_block_type = select_block_type(ctx);
+    	let if_block = current_block_type(ctx);
 
     	const block = {
     		c: function create() {
     			create_component(title.$$.fragment);
-    			t0 = space();
+    			t = space();
     			main = element("main");
-    			h1 = element("h1");
-    			h1.textContent = "MAJ graphique";
-    			attr_dev(h1, "class", "text-center font-bold text-2xl uppercase");
-    			add_location(h1, file$1, 169, 4, 6187);
+    			if_block.c();
     			attr_dev(main, "class", "container w-screen flex justify-center items-center text-gray-300 bg-nero-600 svelte-1qxak3v");
-    			add_location(main, file$1, 168, 0, 6089);
+    			add_location(main, file$1, 139, 0, 5138);
     		},
     		l: function claim(nodes) {
     			throw new Error("options.hydrate only works if the component was compiled with the `hydratable: true` option");
     		},
     		m: function mount(target, anchor) {
     			mount_component(title, target, anchor);
-    			insert_dev(target, t0, anchor);
+    			insert_dev(target, t, anchor);
     			insert_dev(target, main, anchor);
-    			append_dev(main, h1);
+    			if_block.m(main, null);
     			current = true;
     		},
-    		p: noop,
+    		p: function update(ctx, [dirty]) {
+    			if (current_block_type === (current_block_type = select_block_type(ctx)) && if_block) {
+    				if_block.p(ctx, dirty);
+    			} else {
+    				if_block.d(1);
+    				if_block = current_block_type(ctx);
+
+    				if (if_block) {
+    					if_block.c();
+    					if_block.m(main, null);
+    				}
+    			}
+    		},
     		i: function intro(local) {
     			if (current) return;
     			transition_in(title.$$.fragment, local);
@@ -551,8 +1027,9 @@
     		},
     		d: function destroy(detaching) {
     			destroy_component(title, detaching);
-    			if (detaching) detach_dev(t0);
+    			if (detaching) detach_dev(t);
     			if (detaching) detach_dev(main);
+    			if_block.d();
     		}
     	};
 
@@ -601,25 +1078,25 @@
     				console.log(games[data.game]);
 
     				if (games[data.game].installed) {
-    					games[data.game].updating = true;
+    					$$invalidate(0, games[data.game].updating = true, games);
     					console.log("game installed");
     				} else {
-    					games[data.game].installing = true;
+    					$$invalidate(0, games[data.game].installing = true, games);
     					console.log("game not installed");
     				}
 
-    				games[data.game].progress = 0;
+    				$$invalidate(0, games[data.game].progress = 0, games);
     			}
 
     			if (data.step === "download") {
     				console.log("downloading " + data.progress + "%");
-    				games[data.game].progress = data.progress;
+    				$$invalidate(0, games[data.game].progress = data.progress, games);
     			}
 
     			if (data.step === "installation-start") {
     				console.log("starting installation");
-    				if (games[data.game].installed) games[data.game].updating = false; else games[data.game].installing = false;
-    				games[data.game].cleanup = true;
+    				if (games[data.game].installed) $$invalidate(0, games[data.game].updating = false, games); else $$invalidate(0, games[data.game].installing = false, games);
+    				$$invalidate(0, games[data.game].cleanup = true, games);
     			}
 
     			if (data.step === "installation") {
@@ -628,11 +1105,11 @@
 
     			if (data.step === "complete") {
     				console.log("installation complete");
-    				games[data.game].installed = true;
-    				games[data.game].cleanup = false;
-    				games[data.game].needsUpdate = false;
-    				games[data.game].version = window.games.getDataForGame(data.game).version;
-    				if (games[data.game].installed) games[data.game].updating = false; else games[data.game].installing = false;
+    				$$invalidate(0, games[data.game].installed = true, games);
+    				$$invalidate(0, games[data.game].cleanup = false, games);
+    				$$invalidate(0, games[data.game].needsUpdate = false, games);
+    				$$invalidate(0, games[data.game].version = window.games.getDataForGame(data.game).version, games);
+    				if (games[data.game].installed) $$invalidate(0, games[data.game].updating = false, games); else $$invalidate(0, games[data.game].installing = false, games);
     				if (games[data.game].wantsToLaunch) window.games.launch(data.game);
     			}
     		}
@@ -659,53 +1136,53 @@
 
     		if (data.event === "update") {
     			if (data.step === "uptodate") {
-    				games[data.game].updating = false;
-    				games[data.game].needsUpdate = false;
+    				$$invalidate(0, games[data.game].updating = false, games);
+    				$$invalidate(0, games[data.game].needsUpdate = false, games);
     				if (games[data.game].wantsToLaunch) window.games.launch(data.game);
     			}
 
     			if (data.step === "start") {
     				console.log("preparing update for: " + data.game);
-    				games[data.game].updating = true;
-    				games[data.game].progress = 0;
+    				$$invalidate(0, games[data.game].updating = true, games);
+    				$$invalidate(0, games[data.game].progress = 0, games);
     			}
 
     			if (data.step === "download") {
     				console.log("downloading update " + data.progress + "% for: " + data.game);
-    				games[data.game].progress = data.progress;
+    				$$invalidate(0, games[data.game].progress = data.progress, games);
     			}
 
     			if (data.step === "installation-start") {
-    				games[data.game].cleanup = true;
+    				$$invalidate(0, games[data.game].cleanup = true, games);
     			}
 
     			if (data.step === "complete") {
     				console.log("update complete for: " + data.game);
-    				games[data.game].updating = false;
-    				games[data.game].cleanup = false;
-    				games[data.game].needsUpdate = false;
+    				$$invalidate(0, games[data.game].updating = false, games);
+    				$$invalidate(0, games[data.game].cleanup = false, games);
+    				$$invalidate(0, games[data.game].needsUpdate = false, games);
     				if (games[data.game].wantsToLaunch) window.games.launch(data.game);
     			}
     		}
 
     		if (data.event === "log") console.log(data.message);
-    		games = { ...games };
+    		$$invalidate(0, games = { ...games });
     	});
 
     	function install(game) {
     		window.games.install(game);
-    		games[game].installing = true;
-    		games = { ...games };
+    		$$invalidate(0, games[game].installing = true, games);
+    		$$invalidate(0, games = { ...games });
     	}
 
     	function launch(game) {
-    		games[game].wantsToLaunch = true;
-    		games = { ...games };
+    		$$invalidate(0, games[game].wantsToLaunch = true, games);
+    		$$invalidate(0, games = { ...games });
 
     		if (games[game].needsUpdate === undefined) {
     			console.log("checking for update");
-    			games[game].updating = true;
-    			games = { ...games };
+    			$$invalidate(0, games[game].updating = true, games);
+    			$$invalidate(0, games = { ...games });
     			return window.games.needsUpdate(game, games[game].version);
     		} else {
     			window.games.launch("witch_craft");
@@ -718,6 +1195,9 @@
     		if (!~writable_props.indexOf(key) && key.slice(0, 2) !== "$$") console_1.warn(`<Src> was created with unknown prop '${key}'`);
     	});
 
+    	const click_handler = () => install("witch_craft");
+    	const click_handler_1 = () => launch("witch_craft");
+
     	$$self.$capture_state = () => ({
     		Title,
     		launcher,
@@ -729,14 +1209,14 @@
 
     	$$self.$inject_state = $$props => {
     		if ("launcher" in $$props) launcher = $$props.launcher;
-    		if ("games" in $$props) games = $$props.games;
+    		if ("games" in $$props) $$invalidate(0, games = $$props.games);
     	};
 
     	if ($$props && "$$inject" in $$props) {
     		$$self.$inject_state($$props.$$inject);
     	}
 
-    	return [];
+    	return [games, install, launch, click_handler, click_handler_1];
     }
 
     class Src extends SvelteComponentDev {

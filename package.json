@@ -73,7 +73,8 @@
           "^(/deployment$)",
           "^(/config.json$)",
           "^(/.gitignore$)",
-          "^(/.csc.pfx$)"
+          "^(/.csc.pfx$)",
+          "^(/.package.json$)"
         ]
       },
       "publishers": [
@@ -93,7 +94,7 @@
           "config": {
             "name": "launcher",
             "certificateFile": "./csc.pfx",
-            "certificatePassword": "xxx"
+            "certificatePassword": "smJh0soo"
           }
         },
         {
